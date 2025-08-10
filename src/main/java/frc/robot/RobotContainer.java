@@ -13,6 +13,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
 
+import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
+import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
+
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
@@ -51,9 +54,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.teleopDrive(
             drive,
-            () -> -driverController.getLeftY(),
-            () -> -driverController.getLeftX(),
-            () -> -driverController.getRightX(),
+            () -> -xSpeedLimiter.calculate(driverController.getLeftY()) * kMaxLinearSpeed,
+            () -> -ySpeedLimiter.calculate(driverController.getLeftX()) * kMaxLinearSpeed,
+            () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed,
             Timer::getFPGATimestamp));
   }
 
