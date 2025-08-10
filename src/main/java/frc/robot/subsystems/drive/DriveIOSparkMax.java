@@ -132,4 +132,34 @@ public class DriveIOSparkMax implements DriveIO {
         backLeftEncoder.getPosition(),
         backRightEncoder.getPosition());
   }
+
+  @Override
+  public void updateInputs(DriveIOInputs inputs) {
+    // front left motor
+    inputs.frontLeftPositionRad = frontLeftEncoder.getPosition();
+    inputs.frontLeftVelocityRadPerSec = frontLeftEncoder.getVelocity();
+    inputs.frontLeftAppliedVolts =
+        frontLeftMotor.getAppliedOutput() * frontLeftMotor.getBusVoltage();
+    inputs.frontLeftCurrentAmps = frontLeftMotor.getOutputCurrent();
+
+    // front right motor
+    inputs.frontRightPositionRad = frontRightEncoder.getPosition();
+    inputs.frontRightVelocityRadPerSec = frontRightEncoder.getVelocity();
+    inputs.frontRightAppliedVolts =
+        frontRightMotor.getAppliedOutput() * frontRightMotor.getBusVoltage();
+    inputs.frontRightCurrentAmps = frontRightMotor.getOutputCurrent();
+
+    // back left motor
+    inputs.backLeftPositionRad = backLeftEncoder.getPosition();
+    inputs.backLeftVelocityRadPerSec = backLeftEncoder.getVelocity();
+    inputs.backLeftAppliedVolts = backLeftMotor.getAppliedOutput() * backLeftMotor.getBusVoltage();
+    inputs.backLeftCurrentAmps = backLeftMotor.getOutputCurrent();
+
+    // back right motor
+    inputs.backRightPositionRad = backRightEncoder.getPosition();
+    inputs.backRightVelocityRadPerSec = backRightEncoder.getVelocity();
+    inputs.backRightAppliedVolts =
+        backRightMotor.getAppliedOutput() * backRightMotor.getBusVoltage();
+    inputs.backRightCurrentAmps = backRightMotor.getOutputCurrent();
+  }
 }
