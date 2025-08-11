@@ -25,6 +25,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveIOSparkMax implements DriveIO {
 
@@ -105,6 +106,11 @@ public class DriveIOSparkMax implements DriveIO {
     frontRightMotor.setVoltage((frontRightOutput + frontRightFeedforward));
     backLeftMotor.setVoltage((backLeftOutput + backLeftFeedforward));
     backRightMotor.setVoltage((backRightOutput + backRightFeedforward));
+
+    SmartDashboard.putNumber("Front Left Voltage", frontLeftOutput + frontLeftFeedforward);
+    SmartDashboard.putNumber("Front Right Voltage", frontRightOutput + frontRightFeedforward);
+    SmartDashboard.putNumber("Back Left Voltage", backLeftOutput + backLeftFeedforward);
+    SmartDashboard.putNumber("Back Right Voltage", backRightOutput + backRightFeedforward);
   }
 
   /**
