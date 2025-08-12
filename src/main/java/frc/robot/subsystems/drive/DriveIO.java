@@ -45,10 +45,7 @@ public interface DriveIO {
   public default void updateInputs(DriveIOInputs inputs) {}
 
   /** Run the specified speeds. */
-  public default void setSpeeds(MecanumDriveWheelSpeeds speeds) {
-     DriveIOSparkMax max = new DriveIOSparkMax();
-     max.setSpeeds(speeds);
-  }
+  public default void setSpeeds(MecanumDriveWheelSpeeds speeds) {}
 
   public default MecanumDriveWheelSpeeds getCurrentState() {
     return null;

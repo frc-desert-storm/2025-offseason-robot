@@ -29,10 +29,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveIOSparkMax implements DriveIO {
 
-  private final SparkMax frontLeftMotor = new SparkMax(11, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax frontRightMotor = new SparkMax(12, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backLeftMotor = new SparkMax(13, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backRightMotor = new SparkMax(14, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontLeftMotor = new SparkMax(frontLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontRightMotor = new SparkMax(frontRightCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backLeftMotor = new SparkMax(backLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backRightMotor = new SparkMax(backRightCanId, SparkLowLevel.MotorType.kBrushless);
 
   private final RelativeEncoder frontLeftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder frontRightEncoder = frontRightMotor.getEncoder();
@@ -106,11 +106,6 @@ public class DriveIOSparkMax implements DriveIO {
     frontRightMotor.setVoltage((frontRightOutput + frontRightFeedforward));
     backLeftMotor.setVoltage((backLeftOutput + backLeftFeedforward));
     backRightMotor.setVoltage((backRightOutput + backRightFeedforward));
-
-    SmartDashboard.putNumber("Front Left Voltage", frontLeftOutput + frontLeftFeedforward);
-    SmartDashboard.putNumber("Front Right Voltage", frontRightOutput + frontRightFeedforward);
-    SmartDashboard.putNumber("Back Left Voltage", backLeftOutput + backLeftFeedforward);
-    SmartDashboard.putNumber("Back Right Voltage", backRightOutput + backRightFeedforward);
   }
 
   /**

@@ -8,14 +8,9 @@ import java.util.function.DoubleSupplier;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
-  private static final double FF_RAMP_RATE = 0.1; // Volts/Sec
 
   private DriveCommands() {}
 
-  /**
-   * Standard joystick drive, where X is the forward-backward axis (positive = forward) and Z is the
-   * left-right axis (positive = counter-clockwise).
-   */
   public static Command teleopDrive(
       Drive drive,
       DoubleSupplier xSpeed,

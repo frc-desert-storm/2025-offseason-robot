@@ -35,13 +35,12 @@ public class DriveConstants {
 
   // Motor configuration
   public static final int currentLimit = 50;
-  public static final double wheelRadiusMeters = Units.inchesToMeters(3.0);
   public static final double motorReduction = 8.45;
   public static final boolean frontLeftInverted = false;
   public static final boolean frontRightInverted = true;
   public static final boolean backLeftInverted = false;
   public static final boolean backRightInverted = true;
-  public static final DCMotor gearbox = DCMotor.getCIM(2);
+
 
   // Velocity PID configuration
   public static final double realKp = 0.001;
@@ -55,6 +54,8 @@ public class DriveConstants {
   public static final double simKv = 0.227;
 
   //  // PathPlanner configuration
+  //public static final double wheelRadiusMeters = Units.inchesToMeters(3.0);
+  //public static final DCMotor gearbox = DCMotor.getNEO(1);
   //  public static final double trackWidth = (frontLeftLocation.getX() + backLeftLocation.getX()) /
   // 2.0 + (frontRightLocation.getX() + backRightLocation.getX()) / 2.0; // Get average trackWidth
   //  public static final double robotMassKg = 74.088;
