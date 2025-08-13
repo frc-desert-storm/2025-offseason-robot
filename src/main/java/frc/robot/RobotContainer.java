@@ -5,6 +5,9 @@
 
 package frc.robot;
 
+import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
+import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,9 +15,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
-
-import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
-import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
 public class RobotContainer {
   // Subsystems

@@ -25,14 +25,17 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveIOSparkMax implements DriveIO {
 
-  private final SparkMax frontLeftMotor = new SparkMax(frontLeftCanId, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax frontRightMotor = new SparkMax(frontRightCanId, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backLeftMotor = new SparkMax(backLeftCanId, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backRightMotor = new SparkMax(backRightCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontLeftMotor =
+      new SparkMax(frontLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontRightMotor =
+      new SparkMax(frontRightCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backLeftMotor =
+      new SparkMax(backLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backRightMotor =
+      new SparkMax(backRightCanId, SparkLowLevel.MotorType.kBrushless);
 
   private final RelativeEncoder frontLeftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder frontRightEncoder = frontRightMotor.getEncoder();

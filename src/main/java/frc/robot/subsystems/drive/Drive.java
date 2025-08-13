@@ -62,7 +62,7 @@ public class Drive extends SubsystemBase {
                     ? ChassisSpeeds.fromFieldRelativeSpeeds(
                         xSpeed, ySpeed, rot, m_poseEstimator.getEstimatedPosition().getRotation())
                     : new ChassisSpeeds(xSpeed, ySpeed, rot),
-                periodSeconds));
+                0.02));
     mecanumDriveWheelSpeeds.desaturate(kMaxLinearSpeed);
     io.setSpeeds(mecanumDriveWheelSpeeds);
   }
