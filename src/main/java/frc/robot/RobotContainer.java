@@ -9,7 +9,6 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -56,8 +55,7 @@ public class RobotContainer {
             drive,
             () -> -xSpeedLimiter.calculate(driverController.getLeftY()) * kMaxLinearSpeed,
             () -> -ySpeedLimiter.calculate(driverController.getLeftX()) * kMaxLinearSpeed,
-            () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed,
-            Timer::getFPGATimestamp));
+            () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed));
   }
 
   public Command getAutonomousCommand() {

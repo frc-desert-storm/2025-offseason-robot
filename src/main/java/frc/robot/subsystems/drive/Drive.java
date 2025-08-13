@@ -53,8 +53,7 @@ public class Drive extends SubsystemBase {
     m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
   }
 
-  public void drive(
-      double xSpeed, double ySpeed, double rot, boolean fieldRelative, double periodSeconds) {
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     var mecanumDriveWheelSpeeds =
         m_kinematics.toWheelSpeeds(
             ChassisSpeeds.discretize(

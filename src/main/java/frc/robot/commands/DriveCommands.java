@@ -12,11 +12,7 @@ public class DriveCommands {
   private DriveCommands() {}
 
   public static Command teleopDrive(
-      Drive drive,
-      DoubleSupplier xSpeed,
-      DoubleSupplier ySpeed,
-      DoubleSupplier rotSpeed,
-      DoubleSupplier period) {
+      Drive drive, DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
     return Commands.run(
         () -> {
           // Apply deadband
@@ -25,7 +21,7 @@ public class DriveCommands {
           double rot = MathUtil.applyDeadband(rotSpeed.getAsDouble(), DEADBAND);
 
           // Apply output
-          drive.drive(x, y, rot, true, period.getAsDouble());
+          drive.drive(x, y, rot, true);
         },
         drive);
   }
