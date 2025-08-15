@@ -1,64 +1,120 @@
 // Copyright (c) FIRST and other WPILib contributors.
+
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.littletonrobotics.urcl.URCL;
 
-public class Robot extends TimedRobot {
-  private final XboxController m_controller = new XboxController(0);
-  private final MecanumDrivetrain m_mecanum = new MecanumDrivetrain();
+public class Robot extends LoggedRobot {
+  private Command autonomousCommand;
 
-  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(5);
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(5);
+  private final RobotContainer robotContainer;
 
-  @Override
-  public void autonomousPeriodic() {
-    driveWithJoystick(false);
-    m_mecanum.updateOdometry();
+  public Robot() {
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    switch (BuildConstants.DIRTY) {
+      case 0:
+        Logger.recordMetadata("GitDirty", "All changes committed");
+        break;
+      case 1:
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
+        break;
+      default:
+        Logger.recordMetadata("GitDirty", "Unknown");
+        break;
+    }
+
+    switch (Constants.currentMode) {
+      case REAL:
+        // Running on a real robot, log to a USB stick ("/U/logs")
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+
+      case REPLAY:
+        // Replaying a log, set up replay source
+        setUseTiming(false); // Run as fast as possible
+        String logPath = LogFileUtil.findReplayLog();
+        Logger.setReplaySource(new WPILOGReader(logPath));
+        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        break;
+    }
+
+    // Initialize URCL
+    Logger.registerURCL(URCL.startExternal());
+
+    // Start AdvantageKit logger
+    Logger.start();
+
+    robotContainer = new RobotContainer();
   }
 
   @Override
-  public void teleopPeriodic() {
-    driveWithJoystick(true);
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
-  private void driveWithJoystick(boolean fieldRelative) {
-    double xSpeed = 0.0;
-
-    if(-m_controller.getLeftY() > 0.1 || -m_controller.getLeftY() < -0.1){
-        xSpeed = -m_xspeedLimiter.calculate(m_controller.getLeftY()) * MecanumDrivetrain.kMaxLinearSpeed;
-    }
-
-    double ySpeed = 0.0;
-
-    if(-m_controller.getLeftX() > 0.1 || -m_controller.getLeftX() < -0.1){
-        ySpeed = -m_yspeedLimiter.calculate(m_controller.getLeftX()) * MecanumDrivetrain.kMaxLinearSpeed;
-    }
-    
-    // Get the y speed or sideways/strafe speed. We are inverting this because
-    // we want a positive value when we pull to the left. Xbox controllers
-    // return positive values when you pull to the right by default.
-
-    // Get the rate of angular rotation. We are inverting this because we want a
-    // positive value when we pull to the left (remember, CCW is positive in
-    // mathematics). Xbox controllers return positive values when you pull to
-    // the right by default.
-    double rot = 0.0;
-
-    if(-m_controller.getRightX() > 0.1 || -m_controller.getRightX() < -0.1){
-        rot = -m_rotLimiter.calculate(m_controller.getRightX()) * MecanumDrivetrain.kMaxAngularSpeed;
-    }
-
-    SmartDashboard.putNumber("Forward", xSpeed);
-    SmartDashboard.putNumber("Left/Right", ySpeed);
-    SmartDashboard.putNumber("Rotation", rot);
-    m_mecanum.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
+  @Override
+  public void disabledInit() {
+    CommandScheduler.getInstance().cancelAll();
   }
+
+  @Override
+  public void disabledPeriodic() {}
+
+  @Override
+  public void autonomousInit() {
+    autonomousCommand = robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
+  }
+
+  @Override
+  public void autonomousPeriodic() {}
+
+  @Override
+  public void teleopInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
+  }
+
+  @Override
+  public void teleopPeriodic() {}
+
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
+
+  @Override
+  public void testPeriodic() {}
+
+  @Override
+  public void simulationInit() {}
+
+  @Override
+  public void simulationPeriodic() {}
 }
