@@ -65,4 +65,10 @@ public class Drive extends SubsystemBase {
     mecanumDriveWheelSpeeds.desaturate(kMaxLinearSpeed);
     io.setSpeeds(mecanumDriveWheelSpeeds);
   }
+
+  public void resetPose(Pose2d pose){
+    m_poseEstimator.resetPose(pose);
+    m_field.setRobotPose(pose);
+    gyroIO.resetRotation(pose.getRotation());
+  }
 }

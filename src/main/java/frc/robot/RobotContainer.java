@@ -22,6 +22,8 @@ public class RobotContainer {
   // Controllers
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandXboxController operatorController =
+          new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
@@ -56,6 +58,7 @@ public class RobotContainer {
             () -> -xSpeedLimiter.calculate(driverController.getLeftY()) * kMaxLinearSpeed,
             () -> -ySpeedLimiter.calculate(driverController.getLeftX()) * kMaxLinearSpeed,
             () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed));
+    driverController.start().onTrue(DriveCommands.resetPose(drive));
   }
 
   public Command getAutonomousCommand() {
