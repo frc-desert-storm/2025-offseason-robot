@@ -111,11 +111,12 @@ public class DriveIOSparkMax implements DriveIO {
     frontRightMotor.setVoltage((frontRightOutput + frontRightFeedforward));
     backLeftMotor.setVoltage((backLeftOutput + backLeftFeedforward));
     backRightMotor.setVoltage((backRightOutput + backRightFeedforward));
+
     Logger.recordOutput("Front Left Set Voltage", frontLeftOutput + frontLeftFeedforward);
     Logger.recordOutput("Front Right Set Voltage", frontRightOutput + frontRightFeedforward);
     Logger.recordOutput("Back Left Set Voltage", backLeftOutput + backLeftFeedforward);
     Logger.recordOutput("Back Right Set Voltage", backRightOutput + backRightFeedforward);
-  }
+}
 
   /**
    * Returns the current state of the drivetrain.
