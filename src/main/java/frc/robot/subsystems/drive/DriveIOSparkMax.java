@@ -15,6 +15,8 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
@@ -109,7 +111,12 @@ public class DriveIOSparkMax implements DriveIO {
     frontRightMotor.setVoltage((frontRightOutput + frontRightFeedforward));
     backLeftMotor.setVoltage((backLeftOutput + backLeftFeedforward));
     backRightMotor.setVoltage((backRightOutput + backRightFeedforward));
-  }
+
+    Logger.recordOutput("Front Left Set Voltage", frontLeftOutput + frontLeftFeedforward);
+    Logger.recordOutput("Front Right Set Voltage", frontRightOutput + frontRightFeedforward);
+    Logger.recordOutput("Back Left Set Voltage", backLeftOutput + backLeftFeedforward);
+    Logger.recordOutput("Back Right Set Voltage", backRightOutput + backRightFeedforward);
+}
 
   /**
    * Returns the current state of the drivetrain.
@@ -145,6 +152,7 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.frontLeftAppliedVolts =
         frontLeftMotor.getAppliedOutput() * frontLeftMotor.getBusVoltage();
     inputs.frontLeftCurrentAmps = frontLeftMotor.getOutputCurrent();
+    Logger.recordOutput("Front Left Applied Volts", inputs.frontLeftAppliedVolts);
 
     // front right motor
     inputs.frontRightPositionRad = frontRightEncoder.getPosition();
@@ -152,12 +160,14 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.frontRightAppliedVolts =
         frontRightMotor.getAppliedOutput() * frontRightMotor.getBusVoltage();
     inputs.frontRightCurrentAmps = frontRightMotor.getOutputCurrent();
+    Logger.recordOutput("Front Right Applied Volts", inputs.frontRightAppliedVolts);
 
     // back left motor
     inputs.backLeftPositionRad = backLeftEncoder.getPosition();
     inputs.backLeftVelocityRadPerSec = backLeftEncoder.getVelocity();
     inputs.backLeftAppliedVolts = backLeftMotor.getAppliedOutput() * backLeftMotor.getBusVoltage();
     inputs.backLeftCurrentAmps = backLeftMotor.getOutputCurrent();
+    Logger.recordOutput("Back Left Applied Volts", inputs.backLeftAppliedVolts);
 
     // back right motor
     inputs.backRightPositionRad = backRightEncoder.getPosition();
@@ -165,5 +175,6 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.backRightAppliedVolts =
         backRightMotor.getAppliedOutput() * backRightMotor.getBusVoltage();
     inputs.backRightCurrentAmps = backRightMotor.getOutputCurrent();
+    Logger.recordOutput("Back Right Applied Volts", inputs.backRightAppliedVolts);
   }
 }
