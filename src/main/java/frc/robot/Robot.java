@@ -5,6 +5,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -19,6 +21,8 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
 
   private final RobotContainer robotContainer;
+
+  private PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -71,6 +75,11 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    
+    Logger.recordOutput("Current to Front Left Drive", pdh.getCurrent(1));
+    Logger.recordOutput("Current to Front Right Drive", pdh.getCurrent(2));
+    Logger.recordOutput("Current to Back Left Drive", pdh.getCurrent(3));
+    Logger.recordOutput("Current to Back Right Drive", pdh.getCurrent(4));
   }
 
   @Override

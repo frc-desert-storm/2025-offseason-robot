@@ -15,6 +15,8 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
@@ -25,14 +27,17 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveIOSparkMax implements DriveIO {
 
-  private final SparkMax frontLeftMotor = new SparkMax(11, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax frontRightMotor = new SparkMax(12, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backLeftMotor = new SparkMax(13, SparkLowLevel.MotorType.kBrushless);
-  private final SparkMax backRightMotor = new SparkMax(14, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontLeftMotor =
+      new SparkMax(frontLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax frontRightMotor =
+      new SparkMax(frontRightCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backLeftMotor =
+      new SparkMax(backLeftCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax backRightMotor =
+      new SparkMax(backRightCanId, SparkLowLevel.MotorType.kBrushless);
 
   private final RelativeEncoder frontLeftEncoder = frontLeftMotor.getEncoder();
   private final RelativeEncoder frontRightEncoder = frontRightMotor.getEncoder();
@@ -106,11 +111,10 @@ public class DriveIOSparkMax implements DriveIO {
     frontRightMotor.setVoltage((frontRightOutput + frontRightFeedforward));
     backLeftMotor.setVoltage((backLeftOutput + backLeftFeedforward));
     backRightMotor.setVoltage((backRightOutput + backRightFeedforward));
-
-    SmartDashboard.putNumber("Front Left Voltage", frontLeftOutput + frontLeftFeedforward);
-    SmartDashboard.putNumber("Front Right Voltage", frontRightOutput + frontRightFeedforward);
-    SmartDashboard.putNumber("Back Left Voltage", backLeftOutput + backLeftFeedforward);
-    SmartDashboard.putNumber("Back Right Voltage", backRightOutput + backRightFeedforward);
+    Logger.recordOutput("Front Left Set Voltage", frontLeftOutput + frontLeftFeedforward);
+    Logger.recordOutput("Front Right Set Voltage", frontRightOutput + frontRightFeedforward);
+    Logger.recordOutput("Back Left Set Voltage", backLeftOutput + backLeftFeedforward);
+    Logger.recordOutput("Back Right Set Voltage", backRightOutput + backRightFeedforward);
   }
 
   /**
@@ -147,6 +151,7 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.frontLeftAppliedVolts =
         frontLeftMotor.getAppliedOutput() * frontLeftMotor.getBusVoltage();
     inputs.frontLeftCurrentAmps = frontLeftMotor.getOutputCurrent();
+    Logger.recordOutput("Front Left Applied Volts", inputs.frontLeftAppliedVolts);
 
     // front right motor
     inputs.frontRightPositionRad = frontRightEncoder.getPosition();
@@ -154,12 +159,14 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.frontRightAppliedVolts =
         frontRightMotor.getAppliedOutput() * frontRightMotor.getBusVoltage();
     inputs.frontRightCurrentAmps = frontRightMotor.getOutputCurrent();
+    Logger.recordOutput("Front Right Applied Volts", inputs.frontRightAppliedVolts);
 
     // back left motor
     inputs.backLeftPositionRad = backLeftEncoder.getPosition();
     inputs.backLeftVelocityRadPerSec = backLeftEncoder.getVelocity();
     inputs.backLeftAppliedVolts = backLeftMotor.getAppliedOutput() * backLeftMotor.getBusVoltage();
     inputs.backLeftCurrentAmps = backLeftMotor.getOutputCurrent();
+    Logger.recordOutput("Back Left Applied Volts", inputs.backLeftAppliedVolts);
 
     // back right motor
     inputs.backRightPositionRad = backRightEncoder.getPosition();
@@ -167,5 +174,6 @@ public class DriveIOSparkMax implements DriveIO {
     inputs.backRightAppliedVolts =
         backRightMotor.getAppliedOutput() * backRightMotor.getBusVoltage();
     inputs.backRightCurrentAmps = backRightMotor.getOutputCurrent();
+    Logger.recordOutput("Back Right Applied Volts", inputs.backRightAppliedVolts);
   }
 }
