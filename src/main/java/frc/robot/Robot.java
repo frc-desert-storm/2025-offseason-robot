@@ -75,7 +75,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    
+
     Logger.recordOutput("Current to Front Left Drive", pdh.getCurrent(1));
     Logger.recordOutput("Current to Front Right Drive", pdh.getCurrent(2));
     Logger.recordOutput("Current to Back Left Drive", pdh.getCurrent(3));
