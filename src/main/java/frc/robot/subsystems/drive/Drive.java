@@ -2,14 +2,18 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -24,7 +28,6 @@ public class Drive extends SubsystemBase {
           frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
 
   private final MecanumDrivePoseEstimator m_poseEstimator;
-  private final Field2d m_field = new Field2d();
 
   public Drive(DriveIO io, GyroIO gyroIO) {
     this.io = io;
@@ -39,7 +42,37 @@ public class Drive extends SubsystemBase {
             VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
             VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
-    SmartDashboard.putData("Field", m_field);
+    AutoBuilder.configure(
+        m_poseEstimator::getEstimatedPosition, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting
+        // pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        (speeds, feedforwards) ->
+            driveRobotRelative(
+                speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds.
+        // Also optionally outputs individual module feedforwards
+        new PPHolonomicDriveController( // PPHolonomicController is the built in path following
+            // controller for holonomic drive trains
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            ),
+        ppConfig, // The robot configuration
+        () -> {
+          var alliance = DriverStation.getAlliance();
+          return alliance.filter(value -> value == DriverStation.Alliance.Red).isPresent();
+        },
+        this // Reference to this subsystem to set requirements
+        );
+
+    PathPlannerLogging.setLogActivePathCallback(
+        (activePath) -> {
+          Logger.recordOutput(
+              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (targetPose) -> {
+          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
   }
 
   @Override
@@ -50,7 +83,8 @@ public class Drive extends SubsystemBase {
     Logger.processInputs("Drive/Gyro", inputs);
 
     m_poseEstimator.update(gyroInputs.yawPosition, io.getCurrentDistances());
-    m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
+    Logger.recordOutput("Odometry/Trajectory", m_poseEstimator.getEstimatedPosition());
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
@@ -66,9 +100,23 @@ public class Drive extends SubsystemBase {
     io.setSpeeds(mecanumDriveWheelSpeeds);
   }
 
-  public void resetPose(Pose2d pose){
+  public void resetPose(Pose2d pose) {
     m_poseEstimator.resetPose(pose);
-    m_field.setRobotPose(pose);
     gyroIO.resetRotation(pose.getRotation());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds speeds) {
+    var mecanumDriveWheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
+    mecanumDriveWheelSpeeds.desaturate(kMaxLinearSpeed);
+    io.setSpeeds(mecanumDriveWheelSpeeds);
+  }
+
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return m_kinematics.toChassisSpeeds(
+        new MecanumDriveWheelSpeeds(
+            inputs.frontLeftVelocityRadPerSec * wheelRadiusMeters,
+            inputs.frontRightVelocityRadPerSec * wheelRadiusMeters,
+            inputs.backLeftVelocityRadPerSec * wheelRadiusMeters,
+            inputs.backRightVelocityRadPerSec * wheelRadiusMeters));
   }
 }

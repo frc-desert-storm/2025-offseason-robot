@@ -28,11 +28,11 @@ public class DriveCommands {
         drive);
   }
 
-    public static Command resetPose(Drive drive) {
-        return Commands.run(
-                () -> {
-                    drive.resetPose(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
-                },
-                drive);
-    }
+  public static Command resetPose(Drive drive) {
+    return Commands.run(
+        () -> {
+          drive.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
+        },
+        drive);
+  }
 }

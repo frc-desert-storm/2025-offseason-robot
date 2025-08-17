@@ -8,12 +8,14 @@ package frc.robot;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.drive.*;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   // Subsystems
@@ -23,11 +25,13 @@ public class RobotContainer {
   private final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandXboxController operatorController =
-          new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
+      new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter rotSpeedLimiter = new SlewRateLimiter(5);
+
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -47,6 +51,9 @@ public class RobotContainer {
         break;
     }
 
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
     // Configure the button bindings
     configureBindings();
   }
@@ -62,6 +69,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.get();
   }
 }
