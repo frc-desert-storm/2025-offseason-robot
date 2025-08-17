@@ -7,6 +7,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -18,6 +19,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
 public class Robot extends LoggedRobot {
+
   private Command autonomousCommand;
 
   private final RobotContainer robotContainer;
@@ -69,17 +71,28 @@ public class Robot extends LoggedRobot {
     // Start AdvantageKit logger
     Logger.start();
 
+    // Set Brownout limit to 7.5 volts - change this in Constants
+    RobotController.setBrownoutVoltage(Constants.BROWNOUT_VOLTAGE_LIMIT);
+
     robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    
-    Logger.recordOutput("Current to Front Left Drive", pdh.getCurrent(1));
-    Logger.recordOutput("Current to Front Right Drive", pdh.getCurrent(2));
-    Logger.recordOutput("Current to Back Left Drive", pdh.getCurrent(3));
-    Logger.recordOutput("Current to Back Right Drive", pdh.getCurrent(4));
+
+    // Add voltage logging
+    Logger.recordOutput("Total output voltage", pdh.getVoltage());
+    Logger.recordOutput(
+        "Current to Front Left Drive", pdh.getCurrent(Constants.FRONT_L_MOTOR_CHANNEL));
+    Logger.recordOutput(
+        "Current to Front Right Drive", pdh.getCurrent(Constants.FRONT_R_MOTOR_CHANNEL));
+    Logger.recordOutput(
+        "Current to Back Left Drive", pdh.getCurrent(Constants.BACK_L_MOTOR_CHANNEL));
+    Logger.recordOutput(
+        "Current to Back Right Drive", pdh.getCurrent(Constants.BACK_R_MOTOR_CHANNEL));
+    Logger.recordOutput("Arm Base Left", Constants.ARM_BASE_L_MOTOR_CHANNEL);
+    Logger.recordOutput("Arm Base Right", Constants.ARM_BASE_R_MOTOR_CHANNEL);
   }
 
   @Override

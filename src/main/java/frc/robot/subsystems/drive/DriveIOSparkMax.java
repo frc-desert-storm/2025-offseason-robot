@@ -15,8 +15,6 @@ package frc.robot.subsystems.drive;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
@@ -27,6 +25,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveIOSparkMax implements DriveIO {
 
@@ -116,7 +115,7 @@ public class DriveIOSparkMax implements DriveIO {
     Logger.recordOutput("Front Right Set Voltage", frontRightOutput + frontRightFeedforward);
     Logger.recordOutput("Back Left Set Voltage", backLeftOutput + backLeftFeedforward);
     Logger.recordOutput("Back Right Set Voltage", backRightOutput + backRightFeedforward);
-}
+  }
 
   /**
    * Returns the current state of the drivetrain.
