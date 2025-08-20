@@ -30,4 +30,7 @@ public class ArmConstants {
   public static final int basePivotRightCanID = 22;
   public static final int armExtenderCanID = 23;
   public static final int manipulatorCanId = 24;
+
+  public static final double kDefaultArmKp = 50.0;
+  public static final double kDefaultArmSetpointDegrees = 0;
 }
