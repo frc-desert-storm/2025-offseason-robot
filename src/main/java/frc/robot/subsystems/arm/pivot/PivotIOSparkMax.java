@@ -69,7 +69,8 @@ public class PivotIOSparkMax implements PivotIO {
     final double ffOutput = ff.calculate(setpoint.position, setpoint.velocity);
 
     final double pidOutput = PID.calculate(encoder.getPosition(), setpoint.position);
-    pivotLeftMotor.setVoltage(ffOutput + pidOutput);
+    pivotLeftMotor.setVoltage((ffOutput + pidOutput) * pivotLeftMotor.getBusVoltage());
+    pivotRightMotor.setVoltage((ffOutput + pidOutput) * pivotRightMotor.getBusVoltage());
   }
 
   @Override
