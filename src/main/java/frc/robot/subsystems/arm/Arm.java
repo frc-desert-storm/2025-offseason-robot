@@ -2,6 +2,8 @@ package frc.robot.subsystems.arm;
 
 import static frc.robot.subsystems.drive.DriveConstants.*;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.arm.extension.ExtensionIO;
 import frc.robot.subsystems.arm.extension.ExtensionIOInputsAutoLogged;
@@ -18,6 +20,8 @@ public class Arm extends SubsystemBase {
   public Arm(ExtensionIO extensionIO, PivotIO pivotIO) {
     this.extensionIO = extensionIO;
     this.pivotIO = pivotIO;
+
+    this.setDefaultCommand(Commands.run(this.pivotIO::run, this));
   }
 
   @Override
@@ -26,5 +30,9 @@ public class Arm extends SubsystemBase {
     pivotIO.updateInputs(pivotInputs);
     Logger.processInputs("Arm/Extension", extensionInputs);
     Logger.processInputs("Arm/Pivot", pivotInputs);
+  }
+
+  public void runPivot(Rotation2d target) {
+    pivotIO.setTargetAngle(target);
   }
 }

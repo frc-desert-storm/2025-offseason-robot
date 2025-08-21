@@ -8,7 +8,7 @@ public interface PivotIO {
 
   @AutoLog
   class PivotIOInputs {
-    public Rotation2d pivotAngle = Rotation2d.kZero;
+    public Rotation2d targetAngle = Rotation2d.kZero;
 
     public double pivotLeftPositionRad = 0.0;
     public double pivotLeftVelocityRadPerSec = 0.0;
@@ -21,7 +21,11 @@ public interface PivotIO {
     public double pivotRightCurrentAmps = 0.0;
   }
 
-  default Rotation2d getTargetAngle() {return null;}
+  default void run() {}
+
+  default Rotation2d getTargetAngle() {
+    return null;
+  }
 
   default void setTargetAngle(Rotation2d target) {}
 }
