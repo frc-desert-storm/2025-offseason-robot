@@ -24,4 +24,12 @@ public class ArmConstants {
   public static final int extensionCurrentLimit = 60;
   public static final DCMotor extensionGearbox =
       DCMotor.getNEO(1).withReduction(extensionReduction);
+
+  // Wrist
+  public static final int wristCanId = 23;
+
+    public static final boolean wristInverted = false;
+
+    public static final int wristReduction = 4;
+    public static final int wristCurrentLimit = 60;
 }
