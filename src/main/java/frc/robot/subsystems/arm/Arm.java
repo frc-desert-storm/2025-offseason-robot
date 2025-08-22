@@ -45,6 +45,10 @@ public class Arm extends SubsystemBase {
     return pivotIO.getTargetAngle().getDegrees();
   }
 
+  public void setWristTargetAngle(Rotation2d target) {
+    wristIO.setTargetAngle(target);
+  }
+
   public void resetPivot(Rotation2d target) {
     pivotIO.resetPosition(target);
   }

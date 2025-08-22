@@ -75,6 +75,7 @@ public class RobotContainer {
     driverController.a().onTrue(ArmCommands.intake(arm));
     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
+    driverController.y().onTrue(ArmCommands.testWrist(arm));
     driverController.rightBumper().onTrue(ArmCommands.moveArmUp(arm));
     driverController.leftBumper().onTrue(ArmCommands.moveArmDown(arm));
   }

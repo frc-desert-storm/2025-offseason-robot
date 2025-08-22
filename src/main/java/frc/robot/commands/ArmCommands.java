@@ -48,6 +48,14 @@ public class ArmCommands {
         arm);
   }
 
+  public static Command testWrist(Arm arm) {
+    return Commands.run(
+        () -> {
+          arm.setWristTargetAngle(Rotation2d.fromDegrees(100));
+        },
+        arm);
+  }
+
   public static Command resetArmPose(Arm arm) {
     return Commands.run(
         () -> {
