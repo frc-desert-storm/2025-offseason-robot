@@ -27,7 +27,7 @@ public class ArmConstants {
       DCMotor.getNEO(1).withReduction(extensionReduction);
 
   // Wrist
-  public static final int wristCanId = 23;
+  public static final int wristCanId = 24;
 
   public static final boolean wristInverted = false;
 

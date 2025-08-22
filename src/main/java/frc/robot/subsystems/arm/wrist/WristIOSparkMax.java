@@ -17,7 +17,7 @@ public class WristIOSparkMax implements WristIO {
 
   private Rotation2d targetAngle = new Rotation2d();
 
-  private final ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 0.0, 0.0);
+  private final ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 2.5, 0.0);
 
   public WristIOSparkMax() {
     var config = new SparkMaxConfig();
@@ -36,12 +36,12 @@ public class WristIOSparkMax implements WristIO {
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.03)
-        .d(0.05)
+        .p(0.00)
+        .d(0.00)
         .maxMotion
         // Set MAXMotion parameters for position control
-        .maxVelocity(400)
-        .maxAcceleration(1000)
+        .maxVelocity(4000)
+        .maxAcceleration(10000)
         .allowedClosedLoopError(0.25);
 
     config.inverted(wristInverted);
