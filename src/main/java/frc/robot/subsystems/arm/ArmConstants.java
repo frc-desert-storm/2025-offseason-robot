@@ -28,8 +28,8 @@ public class ArmConstants {
   // Wrist
   public static final int wristCanId = 23;
 
-    public static final boolean wristInverted = false;
+  public static final boolean wristInverted = false;
 
-    public static final int wristReduction = 4;
-    public static final int wristCurrentLimit = 60;
+  public static final int wristReduction = 4;
+  public static final int wristCurrentLimit = 60;
 }

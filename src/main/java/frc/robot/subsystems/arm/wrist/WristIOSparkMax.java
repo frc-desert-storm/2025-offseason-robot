@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm.wrist;
 
+import static frc.robot.subsystems.arm.ArmConstants.*;
+
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -7,12 +9,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-import static frc.robot.subsystems.arm.ArmConstants.*;
-
 public class WristIOSparkMax implements WristIO {
 
-  private final SparkMax wristMotor =
-      new SparkMax(wristCanId, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax wristMotor = new SparkMax(wristCanId, SparkLowLevel.MotorType.kBrushless);
 
   SparkClosedLoopController wristController = wristMotor.getClosedLoopController();
 
@@ -70,8 +69,7 @@ public class WristIOSparkMax implements WristIO {
   public void updateInputs(wristIOInputs inputs) {
     inputs.wristPositionRad = wristMotor.getEncoder().getPosition();
     inputs.wristVelocityRadPerSec = wristMotor.getEncoder().getVelocity();
-    inputs.wristAppliedVolts =
-        wristMotor.getAppliedOutput() * wristMotor.getBusVoltage();
+    inputs.wristAppliedVolts = wristMotor.getAppliedOutput() * wristMotor.getBusVoltage();
     inputs.wristCurrentAmps = wristMotor.getOutputCurrent();
 
     inputs.wristAngle = targetAngle;

@@ -33,8 +33,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if(setpoint <= 118)
-          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint += 0.2));
+          if (setpoint <= 118) arm.setTargetAngle(Rotation2d.fromDegrees(setpoint += 0.2));
         },
         arm);
   }
@@ -44,8 +43,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if(setpoint >= -8)
-          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint -= 0.2));
+          if (setpoint >= -8) arm.setTargetAngle(Rotation2d.fromDegrees(setpoint -= 0.2));
         },
         arm);
   }
