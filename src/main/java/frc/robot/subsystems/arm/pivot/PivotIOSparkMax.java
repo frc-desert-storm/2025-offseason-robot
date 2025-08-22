@@ -2,6 +2,7 @@ package frc.robot.subsystems.arm.pivot;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
@@ -9,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class PivotIOSparkMax implements PivotIO {
@@ -23,10 +25,12 @@ public class PivotIOSparkMax implements PivotIO {
 
   private Rotation2d targetAngle = new Rotation2d();
 
+  private ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 0.0, 0.0);
+
   public PivotIOSparkMax() {
     var config = new SparkMaxConfig();
     config
-        .idleMode(SparkBaseConfig.IdleMode.kBrake)
+        .idleMode(SparkBaseConfig.IdleMode.kCoast)
         .smartCurrentLimit(pivotCurrentLimit)
         .voltageCompensation(11.5);
     config
@@ -40,11 +44,12 @@ public class PivotIOSparkMax implements PivotIO {
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.1)
+        .p(0.03)
+        .d(0.05)
         .maxMotion
         // Set MAXMotion parameters for position control
-        .maxVelocity(4000)
-        .maxAcceleration(10000)
+        .maxVelocity(400)
+        .maxAcceleration(1000)
         .allowedClosedLoopError(0.25);
 
     config.inverted(pivotLeftInverted);
@@ -61,9 +66,15 @@ public class PivotIOSparkMax implements PivotIO {
     this.targetAngle = target;
 
     pivotLeftController.setReference(
-        target.getRadians(), SparkBase.ControlType.kMAXMotionPositionControl);
+        target.getRadians(),
+        SparkBase.ControlType.kMAXMotionPositionControl,
+        ClosedLoopSlot.kSlot0,
+        ff.calculate(pivotLeftMotor.getEncoder().getPosition(), 0.0));
     pivotRightController.setReference(
-        target.getRadians(), SparkBase.ControlType.kMAXMotionPositionControl);
+        target.getRadians(),
+        SparkBase.ControlType.kMAXMotionPositionControl,
+        ClosedLoopSlot.kSlot0,
+        ff.calculate(pivotRightMotor.getEncoder().getPosition(), 0.0));
   }
 
   @Override
@@ -88,5 +99,11 @@ public class PivotIOSparkMax implements PivotIO {
     inputs.pivotRightCurrentAmps = pivotRightMotor.getOutputCurrent();
 
     inputs.pivotAngle = targetAngle;
+  }
+
+  @Override
+  public void resetPosition(Rotation2d pose) {
+    pivotLeftMotor.getEncoder().setPosition(pose.getRadians());
+    pivotRightMotor.getEncoder().setPosition(pose.getRadians());
   }
 }

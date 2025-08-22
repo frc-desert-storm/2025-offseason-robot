@@ -1,5 +1,7 @@
 package frc.robot.subsystems.arm.extension;
 
+import static frc.robot.subsystems.arm.ArmConstants.*;
+
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
@@ -7,8 +9,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import static frc.robot.subsystems.arm.ArmConstants.*;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
 
@@ -34,7 +34,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.1)
+        .p(0.0)
         .maxMotion
         // Set MAXMotion parameters for position control
         .maxVelocity(4000)
@@ -48,8 +48,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
   @Override
   public void setTargetPosition(double position) {
-    extensionController.setReference(
-            position, SparkBase.ControlType.kMAXMotionPositionControl);
+    extensionController.setReference(position, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   @Override

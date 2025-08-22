@@ -12,12 +12,19 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.extension.ExtensionIO;
+import frc.robot.subsystems.arm.extension.ExtensionIOSparkMax;
+import frc.robot.subsystems.arm.pivot.PivotIO;
+import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.drive.*;
 
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Arm arm;
 
   // Controllers
   private final CommandXboxController driverController =
@@ -34,16 +41,19 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive = new Drive(new DriveIOSparkMax(), new GyroIOPigeon2());
+        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax());
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new Drive(new DriveIOSparkMax(), new GyroIO() {});
+        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax());
         break;
 
       default:
         // Replayed robot, disable IO implementations
         drive = new Drive(new DriveIO() {}, new GyroIO() {});
+        arm = new Arm(new ExtensionIO() {}, new PivotIO() {});
         break;
     }
 
@@ -59,6 +69,10 @@ public class RobotContainer {
             () -> -ySpeedLimiter.calculate(driverController.getLeftX()) * kMaxLinearSpeed,
             () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed));
     driverController.start().onTrue(DriveCommands.resetPose(drive));
+
+    driverController.a().onTrue(ArmCommands.intake(arm));
+    driverController.b().onTrue(ArmCommands.resetPivot(arm));
+    driverController.x().onTrue(ArmCommands.score(arm));
   }
 
   public Command getAutonomousCommand() {

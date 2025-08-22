@@ -22,5 +22,6 @@ public class ArmConstants {
 
   public static final int extensionReduction = 36;
   public static final int extensionCurrentLimit = 60;
-  public static final DCMotor extensionGearbox = DCMotor.getNEO(1).withReduction(extensionReduction);
+  public static final DCMotor extensionGearbox =
+      DCMotor.getNEO(1).withReduction(extensionReduction);
 }
