@@ -75,6 +75,8 @@ public class RobotContainer {
     driverController.x().onTrue(ArmCommands.score(arm));
     driverController.rightBumper().onTrue(ArmCommands.moveArmUp(arm));
     driverController.leftBumper().onTrue(ArmCommands.moveArmDown(arm));
+    driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
+    driverController.rightTrigger(0.2).onTrue(ArmCommands.retractArm(arm));
   }
 
   public Command getAutonomousCommand() {

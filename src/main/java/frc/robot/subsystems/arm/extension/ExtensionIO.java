@@ -16,4 +16,8 @@ public interface ExtensionIO {
   }
 
   default void setTargetPosition(double positionInMeters) {}
+
+  default double getTargetPosition(){
+    return 0;
+  }
 }

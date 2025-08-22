@@ -40,4 +40,12 @@ public class Arm extends SubsystemBase {
   public void resetPivot(Rotation2d target) {
     pivotIO.resetPosition(target);
   }
+
+  public void setExtensionSetPoint(double setPointMeters){
+    extensionIO.setTargetPosition(setPointMeters);
+  }
+
+  public double getExtensionSetPoint(){
+    return extensionIO.getTargetPosition();
+  }
 }
