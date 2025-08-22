@@ -28,6 +28,28 @@ public class ArmCommands {
         arm);
   }
 
+  public static Command moveArmUp(Arm arm) {
+    return Commands.run(
+        () -> {
+          // Apply output
+          double setpoint = arm.getTargetAngle();
+          if(setpoint <= 118)
+          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint += 0.2));
+        },
+        arm);
+  }
+
+  public static Command moveArmDown(Arm arm) {
+    return Commands.run(
+        () -> {
+          // Apply output
+          double setpoint = arm.getTargetAngle();
+          if(setpoint >= -8)
+          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint -= 0.2));
+        },
+        arm);
+  }
+
   public static Command resetPivot(Arm arm) {
     return Commands.run(
         () -> {
