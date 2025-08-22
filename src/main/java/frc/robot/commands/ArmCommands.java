@@ -34,9 +34,9 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if (setpoint <= 119.8){
+          if (setpoint <= 119.8) {
             arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.2));
-          } 
+          }
         },
         arm);
   }
@@ -46,7 +46,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if(setpoint >= -9.8){
+          if (setpoint >= -9.8) {
             arm.setTargetAngle(Rotation2d.fromDegrees(setpoint - 0.2));
           }
         },
@@ -67,6 +67,15 @@ public class ArmCommands {
           // Apply output
           arm.resetPivot(Rotation2d.fromDegrees(-10));
           arm.resetWrist(Rotation2d.fromDegrees(-10));
+          arm.resetExtension(0);
+        },
+        arm);
+  }
+
+  public static Command testArm(Arm arm) {
+    return Commands.run(
+        () -> {
+          arm.setExtensionSetPoint(Units.inchesToMeters(8));
         },
         arm);
   }
@@ -76,7 +85,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getExtensionSetPoint();
-          if(setpoint <= 23.3){
+          if (Units.metersToInches(setpoint) <= 23.3) {
             arm.setExtensionSetPoint(setpoint + Units.inchesToMeters(0.2));
           }
         },
@@ -88,11 +97,10 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getExtensionSetPoint();
-          if(setpoint >= 0.2){
+          if (Units.metersToInches(setpoint) >= 0.2) {
             arm.setExtensionSetPoint(setpoint - Units.inchesToMeters(0.2));
           }
         },
         arm);
   }
-  
 }

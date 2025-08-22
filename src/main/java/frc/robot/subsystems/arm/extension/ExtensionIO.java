@@ -7,7 +7,7 @@ public interface ExtensionIO {
 
   @AutoLog
   class ExtensionIOInputs {
-    public double extensionPositionInMeters;
+    public double extensionSetpointMeters = 0.0;
 
     public double extensionPositionRad = 0.0;
     public double extensionVelocityRadPerSec = 0.0;
@@ -17,9 +17,9 @@ public interface ExtensionIO {
 
   default void setTargetPosition(double positionInMeters) {}
 
-  default double getTargetPosition(){
+  default double getTargetPosition() {
     return 0;
   }
 
-  default void resetPose(){}
+  default void resetPose(double target) {}
 }

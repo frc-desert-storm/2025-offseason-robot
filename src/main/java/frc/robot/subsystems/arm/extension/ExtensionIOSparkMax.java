@@ -9,8 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
 
@@ -28,21 +27,20 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(1 / extensionReduction) // Motor Rotations -> Extended Meters
-        .velocityConversionFactor(
-            1 / 60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
+        .positionConversionFactor(extensionReduction) // Motor Rotations -> Extended Meters
+        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     config
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.01)
+        .p(0.001)
         .maxMotion
         // Set MAXMotion parameters for position control
-        .maxVelocity(400)
+        .maxVelocity(100)
         .maxAcceleration(1000)
-        .allowedClosedLoopError(0.25);
+        .allowedClosedLoopError(Units.inchesToMeters(0.5));
 
     config.inverted(extensionInverted);
     extensionMotor.configure(
@@ -52,18 +50,18 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   @Override
   public void setTargetPosition(double position) {
     positionSetPoint = position;
-    extensionController.setReference(positionSetPoint, SparkBase.ControlType.kMAXMotionPositionControl);
+    extensionController.setReference(
+        positionSetPoint, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
   @Override
-  public double getTargetPosition(){
+  public double getTargetPosition() {
     return positionSetPoint;
   }
 
   @Override
-  public void resetPose(){
-    extensionMotor.getEncoder().setPosition(0);
-    positionSetPoint = 0;
+  public void resetPose(double target) {
+    extensionMotor.getEncoder().setPosition(target);
   }
 
   @Override
@@ -73,5 +71,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     inputs.extensionAppliedVolts =
         extensionMotor.getAppliedOutput() * extensionMotor.getBusVoltage();
     inputs.extensionCurrentAmps = extensionMotor.getOutputCurrent();
+
+    inputs.extensionSetpointMeters = positionSetPoint;
   }
 }
