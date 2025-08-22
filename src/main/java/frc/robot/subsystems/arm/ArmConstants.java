@@ -22,6 +22,9 @@ public class ArmConstants {
   public static final double pivotKI = 0.0;
   public static final double pivotKD = 1.50;
 
+  public static final double pivotKMaxVelocity = 100;
+  public static final double pivotKMaxAcceleration = 10;
+
   // Extension
   public static final int extensionCanId = 23;
 

@@ -1,13 +1,10 @@
 package frc.robot.subsystems.arm.pivot;
 
-import java.lang.annotation.Target;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -22,10 +19,11 @@ public class PivotIOSparkMax implements PivotIO {
 
   private final RelativeEncoder encoder = pivotLeftMotor.getEncoder();
 
-  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(10, 20);
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(pivotKMaxVelocity, pivotKMaxAcceleration);
 
   private final ProfiledPIDController PID =
-      new ProfiledPIDController(ArmConstants.pivotKP, ArmConstants.pivotKI, ArmConstants.pivotKD, constraints);
+      new ProfiledPIDController(
+          ArmConstants.pivotKP, ArmConstants.pivotKI, ArmConstants.pivotKD, constraints);
 
   private final ArmFeedforward ff =
       new ArmFeedforward(
