@@ -34,8 +34,9 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if(setpoint <= 118)
-          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint += 0.2));
+          if (setpoint <= 119.8){
+            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.2));
+          } 
         },
         arm);
   }
@@ -45,18 +46,19 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if(setpoint >= -9.8)
-          arm.setTargetAngle(Rotation2d.fromDegrees(setpoint -= 0.2));
+          if(setpoint >= -9.8){
+            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint - 0.2));
+          }
         },
         arm);
   }
 
-  public static Command resetPivot(Arm arm) {
+  public static Command resetArmPose(Arm arm) {
     return Commands.run(
         () -> {
           // Apply output
           arm.resetPivot(Rotation2d.fromDegrees(-10));
-          ;
+          arm.resetWrist(Rotation2d.fromDegrees(-10));
         },
         arm);
   }
@@ -65,12 +67,10 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double length = arm.getExtensionSetPoint();
-          if(length <= 23.1){
-            arm.setExtensionSetPoint(length + Units.inchesToMeters(0.2));
+          double setpoint = arm.getExtensionSetPoint();
+          if(setpoint <= 23.3){
+            arm.setExtensionSetPoint(setpoint + Units.inchesToMeters(0.2));
           }
-          
-          ;
         },
         arm);
   }
@@ -79,13 +79,12 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double length = arm.getExtensionSetPoint();
-          if(length >= 0.2){
-            arm.setExtensionSetPoint(length - Units.inchesToMeters(0.2));
+          double setpoint = arm.getExtensionSetPoint();
+          if(setpoint >= 0.2){
+            arm.setExtensionSetPoint(setpoint - Units.inchesToMeters(0.2));
           }
-          
-          ;
         },
         arm);
   }
+  
 }

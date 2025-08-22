@@ -61,6 +61,12 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   }
 
   @Override
+  public void resetPose(){
+    extensionMotor.getEncoder().setPosition(0);
+    positionSetPoint = 0;
+  }
+
+  @Override
   public void updateInputs(ExtensionIOInputs inputs) {
     inputs.extensionPositionRad = extensionMotor.getEncoder().getPosition();
     inputs.extensionVelocityRadPerSec = extensionMotor.getEncoder().getVelocity();

@@ -20,4 +20,6 @@ public interface ExtensionIO {
   default double getTargetPosition(){
     return 0;
   }
+
+  default void resetPose(){}
 }
