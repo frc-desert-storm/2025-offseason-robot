@@ -1,8 +1,8 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-
 public class ArmConstants {
+
+  // TODO tune all values in this file!
 
   // Pivot
   public static final int pivotLeftCanId = 21;
@@ -27,8 +27,9 @@ public class ArmConstants {
 
   public static final boolean extensionInverted = false;
 
-  public static final int extensionReduction = 36;
+  public static final int extensionReduction = 36; // TODO figure out what this is?!?!?
   public static final int extensionCurrentLimit = 60;
-  public static final DCMotor extensionGearbox =
-      DCMotor.getNEO(1).withReduction(extensionReduction);
+  public static final double extensionKP = 1.08;
+  public static final double extensionKI = 0.0;
+  public static final double extensionKD = 1.50;
 }

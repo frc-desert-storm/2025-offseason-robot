@@ -21,27 +21,29 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kBrake)
-        .smartCurrentLimit(pivotCurrentLimit)
+        .smartCurrentLimit(extensionCurrentLimit)
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(2 * Math.PI / pivotReduction) // Rotor Rotations -> Wheel Radians
+        .positionConversionFactor(2 * Math.PI / extensionReduction) // Rotor Rotations -> Wheel Radians
         .velocityConversionFactor(
-            (2 * Math.PI) / 60.0 / pivotReduction) // Rotor RPM -> Wheel Rad/Sec
+            (2 * Math.PI) / 60.0 / extensionReduction) // Rotor RPM -> Wheel Rad/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     config
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.1)
+        .p(extensionKP)
+        .i(extensionKI)
+        .d(extensionKD)
         .maxMotion
         // Set MAXMotion parameters for position control
         .maxVelocity(4000)
         .maxAcceleration(10000)
         .allowedClosedLoopError(0.25);
 
-    config.inverted(pivotLeftInverted);
+    config.inverted(extensionInverted);
     extensionMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
   }

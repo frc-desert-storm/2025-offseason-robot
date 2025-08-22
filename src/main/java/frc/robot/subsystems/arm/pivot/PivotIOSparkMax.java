@@ -1,11 +1,14 @@
 package frc.robot.subsystems.arm.pivot;
 
+import java.lang.annotation.Target;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.subsystems.arm.ArmConstants;
@@ -19,8 +22,10 @@ public class PivotIOSparkMax implements PivotIO {
 
   private final RelativeEncoder encoder = pivotLeftMotor.getEncoder();
 
-  private final PIDController PID =
-      new PIDController(ArmConstants.pivotKP, ArmConstants.pivotKI, ArmConstants.pivotKD);
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(10, 20);
+
+  private final ProfiledPIDController PID =
+      new ProfiledPIDController(ArmConstants.pivotKP, ArmConstants.pivotKI, ArmConstants.pivotKD, constraints);
 
   private final ArmFeedforward ff =
       new ArmFeedforward(
@@ -65,10 +70,8 @@ public class PivotIOSparkMax implements PivotIO {
 
   @Override
   public void run() {
-    TrapezoidProfile.State setpoint = new TrapezoidProfile.State(targetAngle.getRadians(), 0.0);
-    final double ffOutput = ff.calculate(setpoint.position, setpoint.velocity);
-
-    final double pidOutput = PID.calculate(encoder.getPosition(), setpoint.position);
+    final double ffOutput = ff.calculate(targetAngle.getRadians(), 0.0);
+    final double pidOutput = PID.calculate(encoder.getPosition(), targetAngle.getRadians());
     pivotLeftMotor.setVoltage((ffOutput + pidOutput) * pivotLeftMotor.getBusVoltage());
   }
 
