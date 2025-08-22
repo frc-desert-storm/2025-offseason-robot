@@ -2,14 +2,13 @@ package frc.robot.subsystems.arm.extension;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.math.util.Units;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
 
@@ -17,6 +16,9 @@ public class ExtensionIOSparkMax implements ExtensionIO {
       new SparkMax(extensionCanId, SparkLowLevel.MotorType.kBrushless);
 
   SparkClosedLoopController extensionController = extensionMotor.getClosedLoopController();
+
+  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0,0,0);
+
   private double positionSetPoint = 0;
 
   public ExtensionIOSparkMax() {
@@ -27,20 +29,21 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(extensionReduction) // Motor Rotations -> Extended Meters
-        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
+        .positionConversionFactor(1 / extensionReduction) // Motor Rotations -> Extended Meters
+        .velocityConversionFactor(
+            1 / 60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     config
         .closedLoop
         .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control
-        .p(0.001)
+        .p(0.0)
         .maxMotion
         // Set MAXMotion parameters for position control
-        .maxVelocity(100)
+        .maxVelocity(400)
         .maxAcceleration(1000)
-        .allowedClosedLoopError(Units.inchesToMeters(0.5));
+        .allowedClosedLoopError(0.25);
 
     config.inverted(extensionInverted);
     extensionMotor.configure(
@@ -51,11 +54,11 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void setTargetPosition(double position) {
     positionSetPoint = position;
     extensionController.setReference(
-        positionSetPoint, SparkBase.ControlType.kMAXMotionPositionControl);
+        positionSetPoint, SparkBase.ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ff.calculate(0.0));
   }
 
   @Override
-  public double getTargetPosition() {
+  public double getTargetPosition(){
     return positionSetPoint;
   }
 
