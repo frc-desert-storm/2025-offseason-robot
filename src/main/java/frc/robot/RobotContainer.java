@@ -19,6 +19,8 @@ import frc.robot.subsystems.arm.extension.ExtensionIO;
 import frc.robot.subsystems.arm.extension.ExtensionIOSparkMax;
 import frc.robot.subsystems.arm.pivot.PivotIO;
 import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
+import frc.robot.subsystems.arm.wrist.WristIO;
+import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
 import frc.robot.subsystems.drive.*;
 
 public class RobotContainer {
@@ -41,19 +43,19 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive = new Drive(new DriveIOSparkMax(), new GyroIOPigeon2());
-        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax());
+        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax(), new WristIOSparkMax());
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new Drive(new DriveIOSparkMax(), new GyroIO() {});
-        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax());
+        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax(), new WristIOSparkMax());
         break;
 
       default:
         // Replayed robot, disable IO implementations
         drive = new Drive(new DriveIO() {}, new GyroIO() {});
-        arm = new Arm(new ExtensionIO() {}, new PivotIO() {});
+        arm = new Arm(new ExtensionIO() {}, new PivotIO() {}, new WristIO() {});
         break;
     }
 
@@ -71,7 +73,7 @@ public class RobotContainer {
     driverController.start().onTrue(DriveCommands.resetPose(drive));
 
     driverController.a().onTrue(ArmCommands.intake(arm));
-    driverController.b().onTrue(ArmCommands.resetPivot(arm));
+    driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
     driverController.rightBumper().onTrue(ArmCommands.moveArmUp(arm));
     driverController.leftBumper().onTrue(ArmCommands.moveArmDown(arm));

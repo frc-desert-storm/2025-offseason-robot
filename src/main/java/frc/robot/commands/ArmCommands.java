@@ -48,12 +48,12 @@ public class ArmCommands {
         arm);
   }
 
-  public static Command resetPivot(Arm arm) {
+  public static Command resetArmPose(Arm arm) {
     return Commands.run(
         () -> {
           // Apply output
           arm.resetPivot(Rotation2d.fromDegrees(-10));
-          ;
+          arm.resetWrist(Rotation2d.fromDegrees(-10));
         },
         arm);
   }

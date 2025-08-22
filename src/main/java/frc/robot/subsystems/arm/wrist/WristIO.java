@@ -4,10 +4,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface WristIO {
-  default void updateInputs(wristIOInputs inputs) {}
+  default void updateInputs(WristIOInputs inputs) {}
 
   @AutoLog
-  class wristIOInputs {
+  class WristIOInputs {
     public Rotation2d wristAngle = Rotation2d.kZero;
 
     public double wristPositionRad = 0.0;

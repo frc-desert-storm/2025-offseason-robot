@@ -8,6 +8,8 @@ import frc.robot.subsystems.arm.extension.ExtensionIO;
 import frc.robot.subsystems.arm.extension.ExtensionIOInputsAutoLogged;
 import frc.robot.subsystems.arm.pivot.PivotIO;
 import frc.robot.subsystems.arm.pivot.PivotIOInputsAutoLogged;
+import frc.robot.subsystems.arm.wrist.WristIO;
+import frc.robot.subsystems.arm.wrist.WristIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
@@ -15,18 +17,24 @@ public class Arm extends SubsystemBase {
   private final ExtensionIOInputsAutoLogged extensionInputs = new ExtensionIOInputsAutoLogged();
   private final PivotIO pivotIO;
   private final PivotIOInputsAutoLogged pivotInputs = new PivotIOInputsAutoLogged();
+  private final WristIO wristIO;
+  private final WristIOInputsAutoLogged wristInputs = new WristIOInputsAutoLogged();
 
-  public Arm(ExtensionIO extensionIO, PivotIO pivotIO) {
+  public Arm(ExtensionIO extensionIO, PivotIO pivotIO, WristIO wristIO) {
     this.extensionIO = extensionIO;
     this.pivotIO = pivotIO;
+    this.wristIO = wristIO;
   }
 
   @Override
   public void periodic() {
     extensionIO.updateInputs(extensionInputs);
     pivotIO.updateInputs(pivotInputs);
+    wristIO.updateInputs(wristInputs);
     Logger.processInputs("Arm/Extension", extensionInputs);
     Logger.processInputs("Arm/Pivot", pivotInputs);
+
+    Logger.processInputs("Arm/Wrist", wristInputs);
   }
 
   public void setTargetAngle(Rotation2d target) {
@@ -39,5 +47,9 @@ public class Arm extends SubsystemBase {
 
   public void resetPivot(Rotation2d target) {
     pivotIO.resetPosition(target);
+  }
+
+  public void resetWrist(Rotation2d target) {
+    wristIO.resetPosition(target);
   }
 }
