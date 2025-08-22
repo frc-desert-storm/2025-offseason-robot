@@ -6,8 +6,6 @@ import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
@@ -17,7 +15,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
   SparkClosedLoopController extensionController = extensionMotor.getClosedLoopController();
 
-  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0,0,0);
+  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0, 0, 0);
 
   private double positionSetPoint = 0;
 
@@ -30,8 +28,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     config
         .encoder
         .positionConversionFactor(1 / extensionReduction) // Motor Rotations -> Extended Meters
-        .velocityConversionFactor(
-            1 / 60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
+        .velocityConversionFactor(1 / 60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     config
@@ -54,11 +51,14 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void setTargetPosition(double position) {
     positionSetPoint = position;
     extensionController.setReference(
-        positionSetPoint, SparkBase.ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, ff.calculate(0.0));
+        positionSetPoint,
+        SparkBase.ControlType.kMAXMotionPositionControl,
+        ClosedLoopSlot.kSlot0,
+        ff.calculate(0.0));
   }
 
   @Override
-  public double getTargetPosition(){
+  public double getTargetPosition() {
     return positionSetPoint;
   }
 

@@ -2,16 +2,16 @@ package frc.robot.subsystems.arm.pivot;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 public class PivotIOSparkMax implements PivotIO {
 
@@ -20,12 +20,11 @@ public class PivotIOSparkMax implements PivotIO {
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  SparkClosedLoopController pivotLeftController = pivotLeftMotor.getClosedLoopController();
-  SparkClosedLoopController pivotRightController = pivotRightMotor.getClosedLoopController();
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(400, 1000);
 
-  private Rotation2d targetAngle = new Rotation2d();
+  private final ProfiledPIDController pid = new ProfiledPIDController(0.03, 0.0, 0.05, constraints);
 
-  private ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 0.0, 0.0);
+  private final ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 0.0, 0.0);
 
   public PivotIOSparkMax() {
     var config = new SparkMaxConfig();
@@ -56,30 +55,32 @@ public class PivotIOSparkMax implements PivotIO {
     pivotLeftMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
-    config.inverted(pivotRightInverted);
+    config.follow(pivotLeftMotor, pivotRightInverted);
     pivotRightMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    pid.setTolerance(0.25);
   }
 
   @Override
   public void setTargetAngle(Rotation2d target) {
-    this.targetAngle = target;
+    pid.setGoal(target.getRadians());
+    run();
+  }
 
-    pivotLeftController.setReference(
-        target.getRadians(),
-        SparkBase.ControlType.kMAXMotionPositionControl,
-        ClosedLoopSlot.kSlot0,
-        ff.calculate(pivotLeftMotor.getEncoder().getPosition(), 0.0));
-    pivotRightController.setReference(
-        target.getRadians(),
-        SparkBase.ControlType.kMAXMotionPositionControl,
-        ClosedLoopSlot.kSlot0,
-        ff.calculate(pivotRightMotor.getEncoder().getPosition(), 0.0));
+  @Override
+  public void run() {
+    double position = pivotLeftMotor.getEncoder().getPosition();
+    double pidOutput = pid.calculate(position);
+
+    double ffOutput = ff.calculate(pid.getSetpoint().position, pid.getSetpoint().velocity);
+
+    pivotLeftMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override
   public Rotation2d getTargetAngle() {
-    return targetAngle;
+    return Rotation2d.fromRadians(pid.getSetpoint().position);
   }
 
   @Override
@@ -98,7 +99,9 @@ public class PivotIOSparkMax implements PivotIO {
         pivotRightMotor.getAppliedOutput() * pivotRightMotor.getBusVoltage();
     inputs.pivotRightCurrentAmps = pivotRightMotor.getOutputCurrent();
 
-    inputs.pivotAngle = targetAngle;
+    inputs.pivotTargetAngle = getTargetAngle();
+
+    run();
   }
 
   @Override
