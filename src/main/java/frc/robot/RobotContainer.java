@@ -8,6 +8,7 @@ package frc.robot;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,6 +24,7 @@ import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.arm.wrist.WristIO;
 import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
 import frc.robot.subsystems.drive.*;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
   // Subsystems
@@ -38,6 +40,8 @@ public class RobotContainer {
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter rotSpeedLimiter = new SlewRateLimiter(5);
+
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -59,6 +63,9 @@ public class RobotContainer {
         arm = new Arm(new ExtensionIO() {}, new PivotIO() {}, new WristIO() {});
         break;
     }
+
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Configure the button bindings
     configureBindings();
@@ -84,7 +91,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return autoChooser.get();
   }
 
   public void teleopInit() {
