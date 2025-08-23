@@ -27,8 +27,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(1 / extensionReduction) // Motor Rotations -> Extended Meters
-        .velocityConversionFactor(1 / 60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
+        .positionConversionFactor(extensionReduction) // Motor Rotations -> Extended Meters
+        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     config

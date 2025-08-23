@@ -10,6 +10,7 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommands;
@@ -76,13 +77,17 @@ public class RobotContainer {
     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
     driverController.y().onTrue(ArmCommands.testWrist(arm));
-    driverController.leftBumper().onTrue(ArmCommands.testArm(arm));
-    // driverController.rightBumper().onTrue(ArmCommands.moveArmUp(arm));
-    // driverController.leftBumper().onTrue(ArmCommands.moveArmDown(arm));
+    // driverController.leftBumper().onTrue(ArmCommands.testArm(arm));
+    driverController.rightBumper().whileTrue(ArmCommands.moveArmUp(arm));
+    driverController.leftBumper().whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
   }
 
   public Command getAutonomousCommand() {
     return null;
+  }
+
+  public void teleopInit() {
+    CommandScheduler.getInstance().schedule(ArmCommands.resetArmPose(arm));
   }
 }

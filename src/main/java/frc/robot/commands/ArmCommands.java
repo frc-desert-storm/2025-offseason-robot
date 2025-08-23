@@ -5,6 +5,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.arm.Arm;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmCommands {
   private static final double DEADBAND = 0.3;
@@ -34,8 +35,9 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
-          if (setpoint <= 119.8) {
-            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.2));
+          Logger.recordOutput("arm/pivot", setpoint);
+          if (setpoint <= 90) {
+            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.5));
           }
         },
         arm);
@@ -46,8 +48,9 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getTargetAngle();
+          Logger.recordOutput("arm/pivot", setpoint);
           if (setpoint >= -9.8) {
-            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint - 0.2));
+            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint - 0.5));
           }
         },
         arm);

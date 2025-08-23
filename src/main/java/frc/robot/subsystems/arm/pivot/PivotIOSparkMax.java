@@ -5,13 +5,14 @@ import static frc.robot.subsystems.arm.ArmConstants.*;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class PivotIOSparkMax implements PivotIO {
 
@@ -20,11 +21,11 @@ public class PivotIOSparkMax implements PivotIO {
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(400, 1000);
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(400, 200);
 
-  private final ProfiledPIDController pid = new ProfiledPIDController(0.03, 0.0, 0.05, constraints);
+  private final ProfiledPIDController pid = new ProfiledPIDController(1.0, 0.0, 0.00, constraints);
 
-  private final ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 0.0, 0.0);
+  private final ArmFeedforward ff = new ArmFeedforward(0.0, 0.8, 0.0, 0.0);
 
   public PivotIOSparkMax() {
     var config = new SparkMaxConfig();
@@ -39,23 +40,12 @@ public class PivotIOSparkMax implements PivotIO {
             (2 * Math.PI) / 60.0 / pivotReduction) // Rotor RPM -> Wheel Rad/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    config
-        .closedLoop
-        .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-        // Set PID values for position control
-        .p(0.03)
-        .d(0.05)
-        .maxMotion
-        // Set MAXMotion parameters for position control
-        .maxVelocity(400)
-        .maxAcceleration(1000)
-        .allowedClosedLoopError(0.25);
 
     config.inverted(pivotLeftInverted);
     pivotLeftMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
-    config.follow(pivotLeftMotor, pivotRightInverted);
+    config.inverted(pivotRightInverted);
     pivotRightMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
@@ -70,12 +60,16 @@ public class PivotIOSparkMax implements PivotIO {
 
   @Override
   public void run() {
-    double position = pivotLeftMotor.getEncoder().getPosition();
-    double pidOutput = pid.calculate(position);
+    double pidOutput = pid.calculate(pivotLeftMotor.getEncoder().getPosition());
 
     double ffOutput = ff.calculate(pid.getSetpoint().position, pid.getSetpoint().velocity);
 
+    Logger.recordOutput("arm/pid", pidOutput);
+    Logger.recordOutput("arm/ff", ffOutput);
+    Logger.recordOutput("arm/setpoint", Units.radiansToDegrees(pid.getGoal().position));
+
     pivotLeftMotor.setVoltage(pidOutput + ffOutput);
+    pivotRightMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override
@@ -108,5 +102,7 @@ public class PivotIOSparkMax implements PivotIO {
   public void resetPosition(Rotation2d pose) {
     pivotLeftMotor.getEncoder().setPosition(pose.getRadians());
     pivotRightMotor.getEncoder().setPosition(pose.getRadians());
+
+    pid.setGoal(pose.getRadians());
   }
 }
