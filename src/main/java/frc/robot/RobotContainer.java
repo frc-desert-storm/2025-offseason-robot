@@ -53,7 +53,7 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive = new Drive(new DriveIOSparkMax(), new GyroIO() {});
+        drive = new Drive(new DriveIOSim(), new GyroIO() {});
         arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax(), new WristIOSparkMax());
         break;
 

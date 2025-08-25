@@ -85,7 +85,7 @@ public class Drive extends SubsystemBase {
 
     m_poseEstimator.update(gyroInputs.yawPosition, io.getCurrentDistances());
 
-    Logger.recordOutput("Odometry/Trajectory", m_poseEstimator.getEstimatedPosition());
+    Logger.recordOutput("Odometry/Pose", m_poseEstimator.getEstimatedPosition());
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
