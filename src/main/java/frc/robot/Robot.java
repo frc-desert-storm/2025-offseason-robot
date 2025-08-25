@@ -105,16 +105,16 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousCommand = robotContainer.getAutonomousCommand().withTimeout(5);
 
     // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+    if (autonomousCommand != null) {}
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    CommandScheduler.getInstance().schedule(autonomousCommand);
+  }
 
   @Override
   public void teleopInit() {
@@ -122,7 +122,7 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    robotContainer.teleopInit();
+    // robotContainer.teleopInit();
   }
 
   @Override

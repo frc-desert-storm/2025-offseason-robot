@@ -67,6 +67,8 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
+    autoChooser.addOption("simple", DriveCommands.auto(drive));
+
     // Configure the button bindings
     configureBindings();
   }
@@ -83,10 +85,12 @@ public class RobotContainer {
     driverController.a().onTrue(ArmCommands.intake(arm));
     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
-    driverController.y().onTrue(ArmCommands.testWrist(arm));
     // driverController.leftBumper().onTrue(ArmCommands.testArm(arm));
-    driverController.rightBumper().whileTrue(ArmCommands.moveArmUp(arm));
-    driverController.leftBumper().whileTrue(ArmCommands.moveArmDown(arm));
+
+    driverController.leftBumper().onTrue(ArmCommands.scoreCommand(arm));
+    driverController.rightBumper().onTrue(ArmCommands.intakeCommand(arm));
+    driverController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
+    driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
   }
 

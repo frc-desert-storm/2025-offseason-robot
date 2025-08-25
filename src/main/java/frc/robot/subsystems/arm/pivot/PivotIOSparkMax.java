@@ -50,6 +50,8 @@ public class PivotIOSparkMax implements PivotIO {
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
     pid.setTolerance(0.25);
+
+    pivotLeftMotor.getEncoder().setPosition(Units.degreesToRadians(-10));
   }
 
   @Override
@@ -103,6 +105,6 @@ public class PivotIOSparkMax implements PivotIO {
     pivotLeftMotor.getEncoder().setPosition(pose.getRadians());
     pivotRightMotor.getEncoder().setPosition(pose.getRadians());
 
-    pid.setGoal(pose.getRadians());
+    pid.setGoal(Units.degreesToRadians(-10));
   }
 }

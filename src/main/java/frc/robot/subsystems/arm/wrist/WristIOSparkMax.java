@@ -3,21 +3,26 @@ package frc.robot.subsystems.arm.wrist;
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
 import com.revrobotics.spark.*;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class WristIOSparkMax implements WristIO {
 
   private final SparkMax wristMotor = new SparkMax(wristCanId, SparkLowLevel.MotorType.kBrushless);
 
-  SparkClosedLoopController wristController = wristMotor.getClosedLoopController();
-
   private Rotation2d targetAngle = new Rotation2d();
 
-  private final ArmFeedforward ff = new ArmFeedforward(0.0, 1.38, 2.5, 0.0);
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(400, 200);
+
+  private final ProfiledPIDController pid = new ProfiledPIDController(1.0, 0.0, 0.00, constraints);
+
+  private final ArmFeedforward ff = new ArmFeedforward(0.0, 0.8, 0.0, 0.0);
 
   public WristIOSparkMax() {
     var config = new SparkMaxConfig();
@@ -32,17 +37,6 @@ public class WristIOSparkMax implements WristIO {
             (2 * Math.PI) / 60.0 / wristReduction) // Rotor RPM -> Wheel Rad/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    config
-        .closedLoop
-        .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-        // Set PID values for position control
-        .p(0.00)
-        .d(0.00)
-        .maxMotion
-        // Set MAXMotion parameters for position control
-        .maxVelocity(4000)
-        .maxAcceleration(10000)
-        .allowedClosedLoopError(0.25);
 
     config.inverted(wristInverted);
     wristMotor.configure(
@@ -51,13 +45,21 @@ public class WristIOSparkMax implements WristIO {
 
   @Override
   public void setTargetAngle(Rotation2d target) {
-    this.targetAngle = target;
+    pid.setGoal(target.getRadians());
+    run();
+  }
 
-    wristController.setReference(
-        target.getRadians(),
-        SparkBase.ControlType.kMAXMotionPositionControl,
-        ClosedLoopSlot.kSlot0,
-        ff.calculate(wristMotor.getEncoder().getPosition(), 0.0));
+  @Override
+  public void run() {
+    double pidOutput = pid.calculate(wristMotor.getEncoder().getPosition());
+
+    double ffOutput = ff.calculate(pid.getSetpoint().position, pid.getSetpoint().velocity);
+
+    Logger.recordOutput("wrist/pid", pidOutput);
+    Logger.recordOutput("wrist/ff", ffOutput);
+    Logger.recordOutput("wrist/setpoint", Units.radiansToDegrees(pid.getGoal().position));
+
+    wristMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override

@@ -36,4 +36,12 @@ public class DriveCommands {
         },
         drive);
   }
+
+  public static Command auto(Drive drive) {
+    return Commands.run(
+            () -> {
+              drive.drive(-1.0, 0.0, 0.0, true);
+            })
+        .withTimeout(5);
+  }
 }
