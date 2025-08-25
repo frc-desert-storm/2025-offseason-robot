@@ -34,7 +34,7 @@ public class ArmConstants {
   public static final double pivotSimKs = 0.0;
   public static final double pivotSimKa = 0.0;
 
-  public static final DCMotor pivotGearbox = DCMotor.getNEO(2).withReduction(pivotReduction);
+  public static final DCMotor pivotGearbox = DCMotor.getNEO(1).withReduction(pivotReduction);
 
   // Extension
   public static final int extensionCanId = 23;

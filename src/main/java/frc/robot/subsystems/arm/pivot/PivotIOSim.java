@@ -1,7 +1,9 @@
 package frc.robot.subsystems.arm.pivot;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
+import static frc.robot.subsystems.drive.DriveConstants.gearbox;
 
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -21,11 +23,17 @@ public class PivotIOSim implements PivotIO {
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
+  private final SparkMaxSim pivotLeftMotorSim = new SparkMaxSim(pivotLeftMotor, gearbox);
+  private final SparkMaxSim pivotRightMotorSim = new SparkMaxSim(pivotRightMotor, gearbox);
 
-  private final ProfiledPIDController pid = new ProfiledPIDController(pivotSimKp, 0.0, pivotSimKd, constraints);
+  TrapezoidProfile.Constraints constraints =
+      new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
 
-  private final ArmFeedforward ff = new ArmFeedforward(pivotSimKs, pivotSimKg, pivotSimKv, pivotSimKa);
+  private final ProfiledPIDController pid =
+      new ProfiledPIDController(pivotSimKp, 0.0, pivotSimKd, constraints);
+
+  private final ArmFeedforward ff =
+      new ArmFeedforward(pivotSimKs, pivotSimKg, pivotSimKv, pivotSimKa);
 
   public PivotIOSim() {
     var config = new SparkMaxConfig();
@@ -70,8 +78,8 @@ public class PivotIOSim implements PivotIO {
     Logger.recordOutput("arm/ff", ffOutput);
     Logger.recordOutput("arm/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
-    pivotLeftMotor.setVoltage(pidOutput + ffOutput);
-    pivotRightMotor.setVoltage(pidOutput + ffOutput);
+    pivotLeftMotorSim.iterate(pidOutput + ffOutput, pivotLeftMotorSim.getBusVoltage(), 0.2);
+    pivotRightMotorSim.iterate(pidOutput + ffOutput, pivotRightMotorSim.getBusVoltage(), 0.2);
   }
 
   @Override
@@ -85,15 +93,15 @@ public class PivotIOSim implements PivotIO {
     inputs.pivotLeftPositionRad = pivotLeftMotor.getEncoder().getPosition();
     inputs.pivotLeftVelocityRadPerSec = pivotLeftMotor.getEncoder().getVelocity();
     inputs.pivotLeftAppliedVolts =
-        pivotLeftMotor.getAppliedOutput() * pivotLeftMotor.getBusVoltage();
-    inputs.pivotLeftCurrentAmps = pivotLeftMotor.getOutputCurrent();
+        pivotLeftMotorSim.getAppliedOutput() * pivotLeftMotorSim.getBusVoltage();
+    inputs.pivotLeftCurrentAmps = pivotLeftMotorSim.getMotorCurrent();
 
     // right motor
     inputs.pivotRightPositionRad = pivotRightMotor.getEncoder().getPosition();
     inputs.pivotRightVelocityRadPerSec = pivotRightMotor.getEncoder().getVelocity();
     inputs.pivotRightAppliedVolts =
-        pivotRightMotor.getAppliedOutput() * pivotRightMotor.getBusVoltage();
-    inputs.pivotRightCurrentAmps = pivotRightMotor.getOutputCurrent();
+        pivotRightMotorSim.getAppliedOutput() * pivotRightMotorSim.getBusVoltage();
+    inputs.pivotRightCurrentAmps = pivotRightMotorSim.getMotorCurrent();
 
     inputs.pivotTargetAngle = getTargetAngle();
 

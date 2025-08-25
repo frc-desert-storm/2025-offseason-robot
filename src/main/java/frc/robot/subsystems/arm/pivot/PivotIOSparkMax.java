@@ -21,11 +21,14 @@ public class PivotIOSparkMax implements PivotIO {
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
+  TrapezoidProfile.Constraints constraints =
+      new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
 
-  private final ProfiledPIDController pid = new ProfiledPIDController(pivotRealKp, 0.0, pivotRealKd, constraints);
+  private final ProfiledPIDController pid =
+      new ProfiledPIDController(pivotRealKp, 0.0, pivotRealKd, constraints);
 
-  private final ArmFeedforward ff = new ArmFeedforward(pivotRealKs, pivotRealKg, pivotRealKv, pivotRealKa);
+  private final ArmFeedforward ff =
+      new ArmFeedforward(pivotRealKs, pivotRealKg, pivotRealKv, pivotRealKa);
 
   public PivotIOSparkMax() {
     var config = new SparkMaxConfig();
