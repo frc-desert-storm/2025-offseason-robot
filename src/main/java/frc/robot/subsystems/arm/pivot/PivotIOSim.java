@@ -14,7 +14,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
-public class PivotIOSparkMax implements PivotIO {
+public class PivotIOSim implements PivotIO {
 
   private final SparkMax pivotLeftMotor =
       new SparkMax(pivotLeftCanId, SparkLowLevel.MotorType.kBrushless);
@@ -23,11 +23,11 @@ public class PivotIOSparkMax implements PivotIO {
 
   TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
 
-  private final ProfiledPIDController pid = new ProfiledPIDController(pivotRealKp, 0.0, pivotRealKd, constraints);
+  private final ProfiledPIDController pid = new ProfiledPIDController(pivotSimKp, 0.0, pivotSimKd, constraints);
 
-  private final ArmFeedforward ff = new ArmFeedforward(pivotRealKs, pivotRealKg, pivotRealKv, pivotRealKa);
+  private final ArmFeedforward ff = new ArmFeedforward(pivotSimKs, pivotSimKg, pivotSimKv, pivotSimKa);
 
-  public PivotIOSparkMax() {
+  public PivotIOSim() {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kCoast)
