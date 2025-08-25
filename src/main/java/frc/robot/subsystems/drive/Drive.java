@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.gyro.GyroIO;
+import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {

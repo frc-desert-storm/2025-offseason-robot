@@ -24,6 +24,8 @@ import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.arm.wrist.WristIO;
 import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.drive.gyro.GyroIO;
+import frc.robot.subsystems.drive.gyro.GyroIOPigeon2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
