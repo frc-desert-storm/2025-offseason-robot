@@ -53,4 +53,25 @@ public class ArmConstants {
 
   public static final int wristReduction = 4;
   public static final int wristCurrentLimit = 60;
+
+    public static final double wristMaxAccel = 200.0;
+    public static final double wristMaxVelo = 400.0;
+
+    public static final double wristRealKp = 1.0;
+    public static final double wristRealKd = 0.0;
+
+    public static final double wristRealKv = 0.0;
+    public static final double wristRealKg = 0.8;
+    public static final double wristRealKs = 0.0;
+    public static final double wristRealKa = 0.0;
+
+    public static final double wristSimKp = 1.0;
+    public static final double wristSimKd = 0.0;
+
+    public static final double wristSimKv = 0.0;
+    public static final double wristSimKg = 1.0;
+    public static final double wristSimKs = 0.0;
+    public static final double wristSimKa = 0.0;
+
+    public static final DCMotor wristGearbox = DCMotor.getNEO(1).withReduction(wristReduction);
 }

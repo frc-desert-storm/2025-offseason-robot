@@ -23,6 +23,7 @@ import frc.robot.subsystems.arm.pivot.PivotIO;
 import frc.robot.subsystems.arm.pivot.PivotIOSim;
 import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.arm.wrist.WristIO;
+import frc.robot.subsystems.arm.wrist.WristIOSim;
 import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.gyro.GyroIO;
@@ -57,7 +58,7 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new Drive(new DriveIOSim(), new GyroIO() {});
-        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSim(), new WristIOSparkMax());
+        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSim(), new WristIOSim());
         break;
 
       default:
