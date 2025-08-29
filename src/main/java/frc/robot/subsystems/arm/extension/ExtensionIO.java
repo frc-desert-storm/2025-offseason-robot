@@ -9,17 +9,19 @@ public interface ExtensionIO {
   class ExtensionIOInputs {
     public double extensionSetpointMeters = 0.0;
 
-    public double extensionPositionRad = 0.0;
-    public double extensionVelocityRadPerSec = 0.0;
+    public double extensionPositionMeters = 0.0;
+    public double extensionVelocityMetersPerSec = 0.0;
     public double extensionAppliedVolts = 0.0;
     public double extensionCurrentAmps = 0.0;
   }
 
   default void setTargetPosition(double positionInMeters) {}
 
+  default void run() {}
+
   default double getTargetPosition() {
     return 0;
   }
 
-  default void resetPose(double target) {}
+  default void resetPosition(double positionInMeters) {}
 }

@@ -1,46 +1,48 @@
 package frc.robot.subsystems.arm.extension;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
+import static frc.robot.subsystems.arm.ArmConstants.extensionRealKa;
+import static frc.robot.subsystems.arm.ArmConstants.extensionRealKd;
+import static frc.robot.subsystems.arm.ArmConstants.extensionRealKp;
+import static frc.robot.subsystems.arm.ArmConstants.extensionRealKv;
 
-import com.revrobotics.spark.*;
-import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkLowLevel;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
 
   private final SparkMax extensionMotor =
       new SparkMax(extensionCanId, SparkLowLevel.MotorType.kBrushless);
 
-  SparkClosedLoopController extensionController = extensionMotor.getClosedLoopController();
+  TrapezoidProfile.Constraints constraints =
+      new TrapezoidProfile.Constraints(extensionMaxVelo, extensionMaxAccel);
 
-  private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0, 0, 0);
+  private final ProfiledPIDController pid =
+      new ProfiledPIDController(extensionRealKp, 0.0, extensionRealKd, constraints);
 
-  private double positionSetPoint = 0;
+  private final SimpleMotorFeedforward ff =
+      new SimpleMotorFeedforward(extensionRealKs, extensionRealKv, extensionRealKa);
 
   public ExtensionIOSparkMax() {
     var config = new SparkMaxConfig();
     config
-        .idleMode(SparkBaseConfig.IdleMode.kBrake)
+        .idleMode(SparkBaseConfig.IdleMode.kCoast)
         .smartCurrentLimit(extensionCurrentLimit)
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(extensionReduction) // Motor Rotations -> Extended Meters
-        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Wheel Meters/Sec
+        .positionConversionFactor(extensionReduction) // Rotor Rotations -> Wheel Radians
+        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Wheel Rad/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    config
-        .closedLoop
-        .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder)
-        // Set PID values for position control
-        .p(0.0)
-        .maxMotion
-        // Set MAXMotion parameters for position control
-        .maxVelocity(400)
-        .maxAcceleration(1000)
-        .allowedClosedLoopError(0.25);
 
     config.inverted(extensionInverted);
     extensionMotor.configure(
@@ -48,33 +50,48 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   }
 
   @Override
-  public void setTargetPosition(double position) {
-    positionSetPoint = position;
-    extensionController.setReference(
-        positionSetPoint,
-        SparkBase.ControlType.kMAXMotionPositionControl,
-        ClosedLoopSlot.kSlot0,
-        ff.calculate(0.0));
+  public void setTargetPosition(double positionInMeters) {
+    pid.setGoal(positionInMeters);
+    run();
+  }
+
+  @Override
+  public void run() {
+    double pidOutput = pid.calculate(extensionMotor.getEncoder().getPosition());
+
+    double ffOutput =
+        ff.calculateWithVelocities(pid.getSetpoint().position, pid.getSetpoint().velocity);
+
+    Logger.recordOutput("arm/extension/pid", pidOutput);
+    Logger.recordOutput("arm/extension/ff", ffOutput);
+    Logger.recordOutput("arm/extension/setpoint", Units.radiansToDegrees(pid.getGoal().position));
+
+    extensionMotor.setVoltage(pidOutput + ffOutput);
+    extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override
   public double getTargetPosition() {
-    return positionSetPoint;
-  }
-
-  @Override
-  public void resetPose(double target) {
-    extensionMotor.getEncoder().setPosition(target);
+    return pid.getSetpoint().position;
   }
 
   @Override
   public void updateInputs(ExtensionIOInputs inputs) {
-    inputs.extensionPositionRad = extensionMotor.getEncoder().getPosition();
-    inputs.extensionVelocityRadPerSec = extensionMotor.getEncoder().getVelocity();
+    inputs.extensionPositionMeters = extensionMotor.getEncoder().getPosition();
+    inputs.extensionVelocityMetersPerSec = extensionMotor.getEncoder().getVelocity();
     inputs.extensionAppliedVolts =
         extensionMotor.getAppliedOutput() * extensionMotor.getBusVoltage();
     inputs.extensionCurrentAmps = extensionMotor.getOutputCurrent();
 
-    inputs.extensionSetpointMeters = positionSetPoint;
+    inputs.extensionSetpointMeters = pid.getSetpoint().position;
+
+    run();
+  }
+
+  @Override
+  public void resetPosition(double positionInMeters) {
+    extensionMotor.getEncoder().setPosition(positionInMeters);
+
+    pid.setGoal(Units.degreesToRadians(-10));
   }
 }

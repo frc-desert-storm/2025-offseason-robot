@@ -65,7 +65,7 @@ public class Arm extends SubsystemBase {
         Rotation2d.fromRadians(Units.radiansToDegrees(pivotInputs.pivotLeftPositionRad)));
     mechanismWrist.setAngle(
         Rotation2d.fromRadians(Units.radiansToDegrees(wristInputs.wristPositionRad)));
-    mechanismArm.setLength(extensionInputs.extensionPositionRad + Units.inchesToMeters(29));
+    mechanismArm.setLength(extensionInputs.extensionPositionMeters + Units.inchesToMeters(29));
   }
 
   public void setTargetAngle(Rotation2d target) {
@@ -93,7 +93,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void resetExtension(double target) {
-    extensionIO.resetPose(target);
+    extensionIO.resetPosition(target);
   }
 
   public void resetWrist(Rotation2d target) {
