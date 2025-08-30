@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm.pivot;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.drive.DriveConstants.gearbox;
 
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
@@ -23,8 +22,8 @@ public class PivotIOSim implements PivotIO {
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  private final SparkMaxSim pivotLeftMotorSim = new SparkMaxSim(pivotLeftMotor, gearbox);
-  private final SparkMaxSim pivotRightMotorSim = new SparkMaxSim(pivotRightMotor, gearbox);
+  private final SparkMaxSim pivotLeftMotorSim = new SparkMaxSim(pivotLeftMotor, pivotGearbox);
+  private final SparkMaxSim pivotRightMotorSim = new SparkMaxSim(pivotRightMotor, pivotGearbox);
 
   TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);

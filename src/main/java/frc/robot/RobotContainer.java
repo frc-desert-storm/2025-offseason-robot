@@ -18,6 +18,7 @@ import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.extension.ExtensionIO;
+import frc.robot.subsystems.arm.extension.ExtensionIOSim;
 import frc.robot.subsystems.arm.extension.ExtensionIOSparkMax;
 import frc.robot.subsystems.arm.pivot.PivotIO;
 import frc.robot.subsystems.arm.pivot.PivotIOSim;
@@ -58,7 +59,7 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new Drive(new DriveIOSim(), new GyroIO() {});
-        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSim(), new WristIOSim());
+        arm = new Arm(new ExtensionIOSim(), new PivotIOSim(), new WristIOSim());
         break;
 
       default:
@@ -89,7 +90,7 @@ public class RobotContainer {
     driverController.a().onTrue(ArmCommands.intake(arm));
     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
-    // driverController.leftBumper().onTrue(ArmCommands.testArm(arm));
+    driverController.y().whileTrue(ArmCommands.extendArm(arm));
 
     driverController.leftBumper().onTrue(ArmCommands.scoreCommand(arm));
     driverController.rightBumper().onTrue(ArmCommands.intakeCommand(arm));

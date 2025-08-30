@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
@@ -32,6 +33,9 @@ public class ArmConstants {
   public static final double pivotSimKg = 1.0;
   public static final double pivotSimKs = 0.0;
   public static final double pivotSimKa = 0.0;
+
+  public static final DCMotor pivotGearbox = DCMotor.getNEO(1).withReduction(pivotReduction);
+
   // Extension
   public static final int extensionCanId = 23;
 
@@ -57,6 +61,8 @@ public class ArmConstants {
   public static final double extensionSimKs = 0.0;
   public static final double extensionSimKa = 0.0;
 
+  public static final DCMotor extensionGearbox =
+      DCMotor.getNEO(1).withReduction(extensionReduction);
   // Wrist
   public static final int wristCanId = 24;
 
@@ -83,4 +89,6 @@ public class ArmConstants {
   public static final double wristSimKg = 1.0;
   public static final double wristSimKs = 0.0;
   public static final double wristSimKa = 0.0;
+
+  public static final DCMotor wristGearbox = DCMotor.getNEO(1).withReduction(wristReduction);
 }

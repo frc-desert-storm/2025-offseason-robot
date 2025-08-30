@@ -29,8 +29,6 @@ public class Arm extends SubsystemBase {
 
   private final Mechanism2d mechanism = new Mechanism2d(1.0, 1.0);
 
-  private final MechanismRoot2d mechanismRoot = mechanism.getRoot("root", 0, 0);
-
   private final MechanismLigament2d mechanismArm =
       new MechanismLigament2d("arm", Units.inchesToMeters(29), 90, 6, new Color8Bit(Color.kPurple));
 
@@ -42,6 +40,7 @@ public class Arm extends SubsystemBase {
     this.pivotIO = pivotIO;
     this.wristIO = wristIO;
 
+    MechanismRoot2d mechanismRoot = mechanism.getRoot("root", 0, 0);
     mechanismRoot.append(mechanismArm);
     mechanismArm.append(mechanismWrist);
   }

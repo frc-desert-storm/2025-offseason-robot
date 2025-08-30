@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm.wrist;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.drive.DriveConstants.gearbox;
 
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
@@ -20,7 +19,7 @@ public class WristIOSim implements WristIO {
 
   private final SparkMax wristMotor = new SparkMax(wristCanId, SparkLowLevel.MotorType.kBrushless);
 
-  private final SparkMaxSim wristMotorSim = new SparkMaxSim(wristMotor, gearbox);
+  private final SparkMaxSim wristMotorSim = new SparkMaxSim(wristMotor, wristGearbox);
 
   TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(wristMaxVelo, wristMaxAccel);

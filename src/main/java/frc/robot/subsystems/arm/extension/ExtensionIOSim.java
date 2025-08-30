@@ -1,11 +1,8 @@
 package frc.robot.subsystems.arm.extension;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKa;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKd;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKp;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKv;
 
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -17,21 +14,23 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
-public class ExtensionIOSparkMax implements ExtensionIO {
+public class ExtensionIOSim implements ExtensionIO {
 
   private final SparkMax extensionMotor =
       new SparkMax(extensionCanId, SparkLowLevel.MotorType.kBrushless);
+
+  private final SparkMaxSim extensionMotorSim = new SparkMaxSim(extensionMotor, extensionGearbox);
 
   TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(extensionMaxVelo, extensionMaxAccel);
 
   private final ProfiledPIDController pid =
-      new ProfiledPIDController(extensionRealKp, 0.0, extensionRealKd, constraints);
+      new ProfiledPIDController(extensionSimKp, 0.0, extensionSimKd, constraints);
 
   private final SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(extensionRealKs, extensionRealKv, extensionRealKa);
+      new SimpleMotorFeedforward(extensionSimKs, extensionSimKv, extensionSimKa);
 
-  public ExtensionIOSparkMax() {
+  public ExtensionIOSim() {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kCoast)
@@ -66,8 +65,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     Logger.recordOutput("arm/extension/ff", ffOutput);
     Logger.recordOutput("arm/extension/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
-    extensionMotor.setVoltage(pidOutput + ffOutput);
-    extensionMotor.setVoltage(pidOutput + ffOutput);
+    extensionMotorSim.iterate(pidOutput + ffOutput, extensionMotorSim.getBusVoltage(), 0.2);
   }
 
   @Override
@@ -80,8 +78,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     inputs.extensionPositionMeters = extensionMotor.getEncoder().getPosition();
     inputs.extensionVelocityMetersPerSec = extensionMotor.getEncoder().getVelocity();
     inputs.extensionAppliedVolts =
-        extensionMotor.getAppliedOutput() * extensionMotor.getBusVoltage();
-    inputs.extensionCurrentAmps = extensionMotor.getOutputCurrent();
+        extensionMotorSim.getAppliedOutput() * extensionMotorSim.getBusVoltage();
+    inputs.extensionCurrentAmps = extensionMotorSim.getMotorCurrent();
 
     inputs.extensionSetpointMeters = pid.getSetpoint().position;
 
@@ -92,6 +90,6 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void resetPosition(double positionInMeters) {
     extensionMotor.getEncoder().setPosition(positionInMeters);
 
-    pid.setGoal(Units.degreesToRadians(-10));
+    pid.setGoal(positionInMeters);
   }
 }
