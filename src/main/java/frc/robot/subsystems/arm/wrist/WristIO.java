@@ -23,4 +23,6 @@ public interface WristIO {
   default void setTargetAngle(Rotation2d target) {}
 
   default void resetPosition(Rotation2d pose) {}
+
+  default void run() {}
 }

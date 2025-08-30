@@ -36,7 +36,7 @@ public class ArmCommands {
           // Apply output
           double setpoint = arm.getTargetAngle();
           Logger.recordOutput("arm/pivot", setpoint);
-          if (setpoint <= 90) {
+          if (setpoint <= 120) {
             arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.5));
           }
         },
@@ -56,10 +56,18 @@ public class ArmCommands {
         arm);
   }
 
-  public static Command testWrist(Arm arm) {
+  public static Command scoreCommand(Arm arm) {
     return Commands.run(
         () -> {
           arm.setWristTargetAngle(Rotation2d.fromDegrees(100));
+        },
+        arm);
+  }
+
+  public static Command intakeCommand(Arm arm) {
+    return Commands.run(
+        () -> {
+          arm.setWristTargetAngle(Rotation2d.fromDegrees(-90));
         },
         arm);
   }
