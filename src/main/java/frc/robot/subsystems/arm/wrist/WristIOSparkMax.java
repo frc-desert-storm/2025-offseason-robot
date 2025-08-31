@@ -68,7 +68,6 @@ public class WristIOSparkMax implements WristIO {
     Logger.recordOutput("arm/wrist/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
     wristMotor.setVoltage(pidOutput + ffOutput);
-    wristMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override

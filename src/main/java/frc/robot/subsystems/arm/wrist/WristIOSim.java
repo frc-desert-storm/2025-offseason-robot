@@ -66,7 +66,6 @@ public class WristIOSim implements WristIO {
     Logger.recordOutput("arm/wrist/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
     wristMotorSim.iterate(pidOutput + ffOutput, wristMotorSim.getBusVoltage(), 0.2);
-    wristMotorSim.iterate(pidOutput + ffOutput, wristMotorSim.getBusVoltage(), 0.2);
   }
 
   @Override

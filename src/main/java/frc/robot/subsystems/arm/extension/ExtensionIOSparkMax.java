@@ -64,9 +64,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
     Logger.recordOutput("arm/extension/ff", ffOutput);
-    Logger.recordOutput("arm/extension/setpoint", Units.radiansToDegrees(pid.getGoal().position));
+    Logger.recordOutput("arm/extension/setpoint", pid.getGoal().position);
 
-    extensionMotor.setVoltage(pidOutput + ffOutput);
     extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 
@@ -92,6 +91,6 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void resetPosition(double positionInMeters) {
     extensionMotor.getEncoder().setPosition(positionInMeters);
 
-    pid.setGoal(Units.degreesToRadians(-10));
+    pid.setGoal(0.0);
   }
 }

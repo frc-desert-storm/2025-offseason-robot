@@ -63,7 +63,7 @@ public class ExtensionIOSim implements ExtensionIO {
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
     Logger.recordOutput("arm/extension/ff", ffOutput);
-    Logger.recordOutput("arm/extension/setpoint", Units.radiansToDegrees(pid.getGoal().position));
+    Logger.recordOutput("arm/extension/setpoint", pid.getGoal().position);
 
     extensionMotorSim.iterate(pidOutput + ffOutput, extensionMotorSim.getBusVoltage(), 0.2);
   }
