@@ -72,7 +72,7 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     // Set Brownout limit to 7.5 volts - change this in Constants
-    RobotController.setBrownoutVoltage(Constants.BROWNOUT_VOLTAGE_LIMIT);
+    RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
 
     robotContainer = new RobotContainer();
   }
@@ -80,19 +80,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    // Add voltage logging
-    Logger.recordOutput("Total output voltage", pdh.getVoltage());
-    Logger.recordOutput(
-        "Current to Front Left Drive", pdh.getCurrent(Constants.FRONT_L_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Front Right Drive", pdh.getCurrent(Constants.FRONT_R_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Back Left Drive", pdh.getCurrent(Constants.BACK_L_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Back Right Drive", pdh.getCurrent(Constants.BACK_R_MOTOR_CHANNEL));
-    Logger.recordOutput("Arm Base Left", Constants.ARM_BASE_L_MOTOR_CHANNEL);
-    Logger.recordOutput("Arm Base Right", Constants.ARM_BASE_R_MOTOR_CHANNEL);
   }
 
   @Override

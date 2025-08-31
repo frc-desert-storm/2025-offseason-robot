@@ -21,20 +21,10 @@ public final class Constants {
 
   // TODO: Over encapsulation- remove this class after Aug ARL
   public static class OperatorConstants {
-    public static final int DRIVER_CONTROLLER_PORT = 0;
-    public static final int OPERATOR_CONTROLLER_PORT = 1;
+    public static final int driverControllerPort = 0;
   }
 
-  public static final double BROWNOUT_VOLTAGE_LIMIT = 7.5;
-
-  public static final int FRONT_L_MOTOR_CHANNEL = 1;
-  public static final int FRONT_R_MOTOR_CHANNEL = 2;
-  public static final int BACK_L_MOTOR_CHANNEL = 3;
-  public static final int BACK_R_MOTOR_CHANNEL = 4;
-
-  // Placeholders
-  public static final int ARM_BASE_L_MOTOR_CHANNEL = -1;
-  public static final int ARM_BASE_R_MOTOR_CHANNEL = -1;
+  public static final double brownoutVoltage = 7.5;
 
   public static enum Mode {
     /** Running on a real robot. */

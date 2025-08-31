@@ -14,7 +14,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
 public class ExtensionIOSparkMax implements ExtensionIO {

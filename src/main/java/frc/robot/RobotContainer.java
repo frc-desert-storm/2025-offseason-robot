@@ -38,9 +38,7 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final CommandXboxController operatorController =
-      new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
+      new CommandXboxController(OperatorConstants.driverControllerPort);
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
