@@ -117,7 +117,7 @@ public class DriveIOSim implements DriveIO {
     frontRightMotorSim.iterate(
         frontRightOutput + frontRightFeedforward, frontRightMotorSim.getBusVoltage(), 0.2);
     backLeftMotorSim.iterate(
-        backLeftOutput + backLeftFeedforward, backRightMotorSim.getBusVoltage(), 0.2);
+        backLeftOutput + backLeftFeedforward, backLeftMotorSim.getBusVoltage(), 0.2);
     backRightMotorSim.iterate(
         backRightOutput + backRightFeedforward, backRightMotorSim.getBusVoltage(), 0.2);
 
