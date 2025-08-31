@@ -5,8 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,8 +21,6 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
 
   private final RobotContainer robotContainer;
-
-  private PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -108,24 +104,10 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-    // robotContainer.teleopInit();
   }
-
-  @Override
-  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
-
-  @Override
-  public void testPeriodic() {}
-
-  @Override
-  public void simulationInit() {}
-
-  @Override
-  public void simulationPeriodic() {}
 }

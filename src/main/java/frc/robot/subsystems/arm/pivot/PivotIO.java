@@ -23,12 +23,23 @@ public interface PivotIO {
     public double pivotRightCurrentAmps = 0.0;
   }
 
+  /** Returns the angle of the pivot. */
   default Rotation2d getTargetAngle() {
     return null;
   }
 
+  /**
+   * Sets the angle of the pivot.
+   *
+   * @param target The target angle to set.
+   */
   default void setTargetAngle(Rotation2d target) {}
 
+  /**
+   * Resets the pivot to the target angle.
+   *
+   * @param pose The target angle to reset to.
+   */
   default void resetPosition(Rotation2d pose) {}
 
   default void run() {}

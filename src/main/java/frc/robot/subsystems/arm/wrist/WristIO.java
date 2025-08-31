@@ -16,12 +16,23 @@ public interface WristIO {
     public double wristCurrentAmps = 0.0;
   }
 
+  /** Returns the angle of the wrist. */
   default Rotation2d getTargetAngle() {
     return null;
   }
 
+  /**
+   * Sets the angle of the wrist.
+   *
+   * @param target The target angle to set.
+   */
   default void setTargetAngle(Rotation2d target) {}
 
+  /**
+   * Resets the wrist to the target angle.
+   *
+   * @param pose The target angle to reset to.
+   */
   default void resetPosition(Rotation2d pose) {}
 
   default void run() {}

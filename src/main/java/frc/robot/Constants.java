@@ -26,7 +26,7 @@ public final class Constants {
 
   public static final double brownoutVoltage = 7.5;
 
-  public static enum Mode {
+  public enum Mode {
     /** Running on a real robot. */
     REAL,
 
