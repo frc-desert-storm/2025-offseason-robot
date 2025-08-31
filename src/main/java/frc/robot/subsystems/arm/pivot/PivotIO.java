@@ -10,6 +10,8 @@ public interface PivotIO {
   class PivotIOInputs {
     public Rotation2d pivotTargetAngle = Rotation2d.kZero;
 
+      public Rotation2d pivotEncoderPosition = Rotation2d.kZero;
+
     public double pivotLeftPositionRad = 0.0;
     public double pivotLeftVelocityRadPerSec = 0.0;
     public double pivotLeftAppliedVolts = 0.0;

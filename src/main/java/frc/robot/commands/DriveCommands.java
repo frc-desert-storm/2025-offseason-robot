@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.drive.Drive;
 import java.util.function.DoubleSupplier;
 
@@ -28,11 +29,19 @@ public class DriveCommands {
         drive);
   }
 
-  public static Command resetPose(Drive drive) {
-    return Commands.run(
+  public static InstantCommand resetPose(Drive drive) {
+    return new InstantCommand(
         () -> {
           drive.resetPose(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
         },
         drive);
+  }
+
+  public static Command auto(Drive drive) {
+    return Commands.run(
+            () -> {
+              drive.drive(-1.0, 0.0, 0.0, true);
+            })
+        .withTimeout(5);
   }
 }

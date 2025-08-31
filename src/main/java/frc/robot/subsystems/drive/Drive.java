@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.gyro.GyroIO;
+import frc.robot.subsystems.drive.gyro.GyroIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
@@ -30,6 +32,7 @@ public class Drive extends SubsystemBase {
   private final MecanumDrivePoseEstimator m_poseEstimator;
 
   public Drive(DriveIO io, GyroIO gyroIO) {
+
     this.io = io;
     this.gyroIO = gyroIO;
 
@@ -84,7 +87,7 @@ public class Drive extends SubsystemBase {
 
     m_poseEstimator.update(gyroInputs.yawPosition, io.getCurrentDistances());
 
-    Logger.recordOutput("Odometry/Trajectory", m_poseEstimator.getEstimatedPosition());
+    Logger.recordOutput("Odometry/Pose", m_poseEstimator.getEstimatedPosition());
   }
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {

@@ -18,12 +18,17 @@ import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.extension.ExtensionIO;
+import frc.robot.subsystems.arm.extension.ExtensionIOSim;
 import frc.robot.subsystems.arm.extension.ExtensionIOSparkMax;
 import frc.robot.subsystems.arm.pivot.PivotIO;
+import frc.robot.subsystems.arm.pivot.PivotIOSim;
 import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.arm.wrist.WristIO;
+import frc.robot.subsystems.arm.wrist.WristIOSim;
 import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.drive.gyro.GyroIO;
+import frc.robot.subsystems.drive.gyro.GyroIOPigeon2;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
@@ -53,8 +58,8 @@ public class RobotContainer {
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        drive = new Drive(new DriveIOSparkMax(), new GyroIO() {});
-        arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax(), new WristIOSparkMax());
+        drive = new Drive(new DriveIOSim(), new GyroIO() {});
+        arm = new Arm(new ExtensionIOSim(), new PivotIOSim(), new WristIOSim());
         break;
 
       default:
@@ -66,6 +71,8 @@ public class RobotContainer {
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("simple", DriveCommands.auto(drive));
 
     // Configure the button bindings
     configureBindings();
@@ -83,10 +90,12 @@ public class RobotContainer {
     driverController.a().onTrue(ArmCommands.intake(arm));
     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
     driverController.x().onTrue(ArmCommands.score(arm));
-    driverController.y().onTrue(ArmCommands.testWrist(arm));
-    // driverController.leftBumper().onTrue(ArmCommands.testArm(arm));
-    driverController.rightBumper().whileTrue(ArmCommands.moveArmUp(arm));
-    driverController.leftBumper().whileTrue(ArmCommands.moveArmDown(arm));
+    driverController.y().whileTrue(ArmCommands.extendArm(arm));
+
+    driverController.leftBumper().onTrue(ArmCommands.scoreCommand(arm));
+    driverController.rightBumper().onTrue(ArmCommands.intakeCommand(arm));
+    driverController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
+    driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
   }
 

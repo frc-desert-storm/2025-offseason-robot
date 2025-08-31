@@ -1,12 +1,8 @@
 package frc.robot.subsystems.arm.wrist;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.arm.ArmConstants.wristRealKa;
-import static frc.robot.subsystems.arm.ArmConstants.wristRealKd;
-import static frc.robot.subsystems.arm.ArmConstants.wristRealKg;
-import static frc.robot.subsystems.arm.ArmConstants.wristRealKp;
-import static frc.robot.subsystems.arm.ArmConstants.wristRealKv;
 
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -19,20 +15,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
-public class WristIOSparkMax implements WristIO {
+public class WristIOSim implements WristIO {
 
   private final SparkMax wristMotor = new SparkMax(wristCanId, SparkLowLevel.MotorType.kBrushless);
+
+  private final SparkMaxSim wristMotorSim = new SparkMaxSim(wristMotor, wristGearbox);
 
   TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(wristMaxVelo, wristMaxAccel);
 
   private final ProfiledPIDController pid =
-      new ProfiledPIDController(wristRealKp, 0.0, wristRealKd, constraints);
+      new ProfiledPIDController(wristSimKp, 0.0, wristSimKd, constraints);
 
   private final ArmFeedforward ff =
-      new ArmFeedforward(wristRealKs, wristRealKg, wristRealKv, wristRealKa);
+      new ArmFeedforward(wristSimKs, wristSimKg, wristSimKv, wristSimKa);
 
-  public WristIOSparkMax() {
+  public WristIOSim() {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kCoast)
@@ -67,7 +65,7 @@ public class WristIOSparkMax implements WristIO {
     Logger.recordOutput("arm/wrist/ff", ffOutput);
     Logger.recordOutput("arm/wrist/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
-    wristMotor.setVoltage(pidOutput + ffOutput);
+    wristMotorSim.iterate(pidOutput + ffOutput, wristMotorSim.getBusVoltage(), 0.2);
   }
 
   @Override
@@ -79,8 +77,8 @@ public class WristIOSparkMax implements WristIO {
   public void updateInputs(WristIOInputs inputs) {
     inputs.wristPositionRad = wristMotor.getEncoder().getPosition();
     inputs.wristVelocityRadPerSec = wristMotor.getEncoder().getVelocity();
-    inputs.wristAppliedVolts = wristMotor.getAppliedOutput() * wristMotor.getBusVoltage();
-    inputs.wristCurrentAmps = wristMotor.getOutputCurrent();
+    inputs.wristAppliedVolts = wristMotorSim.getAppliedOutput() * wristMotorSim.getBusVoltage();
+    inputs.wristCurrentAmps = wristMotorSim.getMotorCurrent();
 
     inputs.wristAngle = Rotation2d.fromRadians(pid.getGoal().position);
 

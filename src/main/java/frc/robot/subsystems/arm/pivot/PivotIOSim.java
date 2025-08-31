@@ -1,9 +1,8 @@
 package frc.robot.subsystems.arm.pivot;
 
-import static edu.wpi.first.units.Units.Radians;
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
-import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
@@ -16,25 +15,26 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
-public class PivotIOSparkMax implements PivotIO {
+public class PivotIOSim implements PivotIO {
 
   private final SparkMax pivotLeftMotor =
       new SparkMax(pivotLeftCanId, SparkLowLevel.MotorType.kBrushless);
   private final SparkMax pivotRightMotor =
       new SparkMax(pivotRightCanId, SparkLowLevel.MotorType.kBrushless);
 
-  private final CANcoder pivotEncoder = new CANcoder(20);
+  private final SparkMaxSim pivotLeftMotorSim = new SparkMaxSim(pivotLeftMotor, pivotGearbox);
+  private final SparkMaxSim pivotRightMotorSim = new SparkMaxSim(pivotRightMotor, pivotGearbox);
 
   TrapezoidProfile.Constraints constraints =
       new TrapezoidProfile.Constraints(pivotMaxVelo, pivotMaxAccel);
 
   private final ProfiledPIDController pid =
-      new ProfiledPIDController(pivotRealKp, 0.0, pivotRealKd, constraints);
+      new ProfiledPIDController(pivotSimKp, 0.0, pivotSimKd, constraints);
 
   private final ArmFeedforward ff =
-      new ArmFeedforward(pivotRealKs, pivotRealKg, pivotRealKv, pivotRealKa);
+      new ArmFeedforward(pivotSimKs, pivotSimKg, pivotSimKv, pivotSimKa);
 
-  public PivotIOSparkMax() {
+  public PivotIOSim() {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kCoast)
@@ -57,6 +57,8 @@ public class PivotIOSparkMax implements PivotIO {
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
     pid.setTolerance(0.25);
+
+    pivotLeftMotor.getEncoder().setPosition(Units.degreesToRadians(-10));
   }
 
   @Override
@@ -67,7 +69,7 @@ public class PivotIOSparkMax implements PivotIO {
 
   @Override
   public void run() {
-    double pidOutput = pid.calculate(pivotEncoder.getAbsolutePosition().getValue().in(Radians));
+    double pidOutput = pid.calculate(pivotLeftMotor.getEncoder().getPosition());
 
     double ffOutput = ff.calculate(pid.getSetpoint().position, pid.getSetpoint().velocity);
 
@@ -75,8 +77,8 @@ public class PivotIOSparkMax implements PivotIO {
     Logger.recordOutput("arm/ff", ffOutput);
     Logger.recordOutput("arm/setpoint", Units.radiansToDegrees(pid.getGoal().position));
 
-    pivotLeftMotor.setVoltage(pidOutput + ffOutput);
-    pivotRightMotor.setVoltage(pidOutput + ffOutput);
+    pivotLeftMotorSim.iterate(pidOutput + ffOutput, pivotLeftMotorSim.getBusVoltage(), 0.2);
+    pivotRightMotorSim.iterate(pidOutput + ffOutput, pivotRightMotorSim.getBusVoltage(), 0.2);
   }
 
   @Override
@@ -90,19 +92,17 @@ public class PivotIOSparkMax implements PivotIO {
     inputs.pivotLeftPositionRad = pivotLeftMotor.getEncoder().getPosition();
     inputs.pivotLeftVelocityRadPerSec = pivotLeftMotor.getEncoder().getVelocity();
     inputs.pivotLeftAppliedVolts =
-        pivotLeftMotor.getAppliedOutput() * pivotLeftMotor.getBusVoltage();
-    inputs.pivotLeftCurrentAmps = pivotLeftMotor.getOutputCurrent();
+        pivotLeftMotorSim.getAppliedOutput() * pivotLeftMotorSim.getBusVoltage();
+    inputs.pivotLeftCurrentAmps = pivotLeftMotorSim.getMotorCurrent();
 
     // right motor
     inputs.pivotRightPositionRad = pivotRightMotor.getEncoder().getPosition();
     inputs.pivotRightVelocityRadPerSec = pivotRightMotor.getEncoder().getVelocity();
     inputs.pivotRightAppliedVolts =
-        pivotRightMotor.getAppliedOutput() * pivotRightMotor.getBusVoltage();
-    inputs.pivotRightCurrentAmps = pivotRightMotor.getOutputCurrent();
+        pivotRightMotorSim.getAppliedOutput() * pivotRightMotorSim.getBusVoltage();
+    inputs.pivotRightCurrentAmps = pivotRightMotorSim.getMotorCurrent();
 
     inputs.pivotTargetAngle = getTargetAngle();
-
-    inputs.pivotEncoderPosition = Rotation2d.fromRadians(pivotEncoder.getAbsolutePosition().getValue().in(Radians));
 
     run();
   }
