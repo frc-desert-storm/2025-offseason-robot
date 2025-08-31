@@ -90,7 +90,9 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Odometry/Pose", m_poseEstimator.getEstimatedPosition());
   }
 
-  /** Drives the robot.
+  /**
+   * Drives the robot.
+   *
    * @param xSpeed Speed of the robot in the x direction (forward).
    * @param ySpeed Speed of the robot in the y direction (sideways).
    * @param rot Angular rate of the robot.
