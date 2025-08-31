@@ -91,6 +91,6 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void resetPosition(double positionInMeters) {
     extensionMotor.getEncoder().setPosition(positionInMeters);
 
-    pid.setGoal(0.0);
+    pid.setGoal(positionInMeters);
   }
 }
