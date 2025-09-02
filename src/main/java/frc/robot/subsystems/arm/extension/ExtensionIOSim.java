@@ -91,4 +91,9 @@ public class ExtensionIOSim implements ExtensionIO {
 
     pid.setGoal(positionInMeters);
   }
+  
+  @Override
+  public boolean atGoal(){
+    return pid.atGoal();
+  }
 }

@@ -93,4 +93,9 @@ public class WristIOSparkMax implements WristIO {
 
     pid.setGoal(Units.degreesToRadians(-10));
   }
+  
+  @Override
+  public boolean atGoal(){
+    return pid.atGoal();
+  }
 }

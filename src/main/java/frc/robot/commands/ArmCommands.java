@@ -86,7 +86,7 @@ public class ArmCommands {
   public static Command testArm(Arm arm) {
     return Commands.run(
         () -> {
-          arm.setExtensionTargetPosition(Units.inchesToMeters(8));
+          arm.setExtensionTargetLength(Units.inchesToMeters(8));
         },
         arm);
   }
@@ -97,7 +97,7 @@ public class ArmCommands {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) <= 23.3) {
-            arm.setExtensionTargetPosition(setpoint + Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint + Units.inchesToMeters(0.2));
           }
         },
         arm);
@@ -109,7 +109,7 @@ public class ArmCommands {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) >= 0.2) {
-            arm.setExtensionTargetPosition(setpoint - Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint - Units.inchesToMeters(0.2));
           }
         },
         arm);
