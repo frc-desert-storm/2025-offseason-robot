@@ -21,7 +21,7 @@ public interface ExtensionIO {
    * @param positionInMeters The position in meters to set.
    */
   default void setTargetPosition(double positionInMeters) {}
-  
+
   /**
    * Gets the current target position.
    *
@@ -37,11 +37,11 @@ public interface ExtensionIO {
    * @param positionInMeters The target position in meters.
    */
   default void resetPosition(double positionInMeters) {}
-  
-  /** Returns if its at the pid goal. */
+
+  /** Returns if it's at the pid goal. */
   default boolean atGoal() {
     return false;
   }
-  
+
   default void run() {}
 }

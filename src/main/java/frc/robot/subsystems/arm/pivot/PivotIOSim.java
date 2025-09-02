@@ -114,9 +114,9 @@ public class PivotIOSim implements PivotIO {
 
     pid.setGoal(Units.degreesToRadians(-10));
   }
-  
+
   @Override
-  public boolean atGoal(){
+  public boolean atGoal() {
     return pid.atGoal();
   }
 }

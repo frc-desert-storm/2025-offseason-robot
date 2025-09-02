@@ -92,9 +92,9 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
     pid.setGoal(positionInMeters);
   }
-  
+
   @Override
-  public boolean atGoal(){
+  public boolean atGoal() {
     return pid.atGoal();
   }
 }

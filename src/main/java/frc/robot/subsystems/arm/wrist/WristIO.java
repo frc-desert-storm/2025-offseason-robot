@@ -34,8 +34,8 @@ public interface WristIO {
    * @param pose The target angle to reset to.
    */
   default void resetPosition(Rotation2d pose) {}
-  
-  /** Returns if its at the pid goal. */
+
+  /** Returns if it's at the pid goal. */
   default boolean atGoal() {
     return false;
   }

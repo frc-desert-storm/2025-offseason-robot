@@ -120,8 +120,8 @@ public class Arm extends SubsystemBase {
   public void resetExtension(double target) {
     extensionIO.resetPosition(target);
   }
-  
-  /** Returns true if the wrist extension and pivot are at their goal. */
+
+  /** Returns true if the wrist, extension and pivot are at their goal. */
   public boolean atGoal() {
     return extensionIO.atGoal() && pivotIO.atGoal() && wristIO.atGoal();
   }
