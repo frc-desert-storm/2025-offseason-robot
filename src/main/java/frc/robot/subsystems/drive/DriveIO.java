@@ -46,11 +46,11 @@ public interface DriveIO {
 
   /** Run the specified speeds. */
   public default void setSpeeds(MecanumDriveWheelSpeeds speeds) {}
-
+  /** Returns the current state of the drivetrain. */
   public default MecanumDriveWheelSpeeds getCurrentState() {
     return null;
   }
-
+  /** Returns the current distances of the wheels. */
   public default MecanumDriveWheelPositions getCurrentDistances() {
     return null;
   }

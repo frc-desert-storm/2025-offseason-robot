@@ -11,7 +11,6 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ArmCommands;
@@ -38,9 +37,7 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final CommandXboxController operatorController =
-      new CommandXboxController(OperatorConstants.OPERATOR_CONTROLLER_PORT);
+      new CommandXboxController(OperatorConstants.driverControllerPort);
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
@@ -78,6 +75,7 @@ public class RobotContainer {
     configureBindings();
   }
 
+  /** Configure the button bindings. */
   private void configureBindings() {
     drive.setDefaultCommand(
         DriveCommands.teleopDrive(
@@ -101,9 +99,5 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
-  }
-
-  public void teleopInit() {
-    CommandScheduler.getInstance().schedule(ArmCommands.resetArmPose(arm));
   }
 }

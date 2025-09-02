@@ -102,7 +102,8 @@ public class PivotIOSparkMax implements PivotIO {
 
     inputs.pivotTargetAngle = getTargetAngle();
 
-    inputs.pivotEncoderPosition = Rotation2d.fromRadians(pivotEncoder.getAbsolutePosition().getValue().in(Radians));
+    inputs.pivotEncoderPosition =
+        Rotation2d.fromRadians(pivotEncoder.getAbsolutePosition().getValue().in(Radians));
 
     run();
   }
@@ -113,5 +114,10 @@ public class PivotIOSparkMax implements PivotIO {
     pivotRightMotor.getEncoder().setPosition(pose.getRadians());
 
     pid.setGoal(Units.degreesToRadians(-10));
+  }
+
+  @Override
+  public boolean atGoal() {
+    return pid.atGoal();
   }
 }

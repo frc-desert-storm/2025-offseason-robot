@@ -90,6 +90,14 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Odometry/Pose", m_poseEstimator.getEstimatedPosition());
   }
 
+  /**
+   * Drives the robot.
+   *
+   * @param xSpeed Speed of the robot in the x direction (forward).
+   * @param ySpeed Speed of the robot in the y direction (sideways).
+   * @param rot Angular rate of the robot.
+   * @param fieldRelative Whether the provided speeds are relative to the field.
+   */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     var mecanumDriveWheelSpeeds =
         m_kinematics.toWheelSpeeds(
@@ -103,17 +111,20 @@ public class Drive extends SubsystemBase {
     io.setSpeeds(mecanumDriveWheelSpeeds);
   }
 
+  /** resets the odometry to the specified pose. */
   public void resetPose(Pose2d pose) {
     m_poseEstimator.resetPose(pose);
     gyroIO.resetRotation(pose.getRotation());
   }
 
+  /** Drives the robot using the specified ChassisSpeeds. Mostly for pathplanner */
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var mecanumDriveWheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
     mecanumDriveWheelSpeeds.desaturate(kMaxLinearSpeed);
     io.setSpeeds(mecanumDriveWheelSpeeds);
   }
 
+  /** Returns the current drivetrain speeds. */
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return m_kinematics.toChassisSpeeds(
         new MecanumDriveWheelSpeeds(

@@ -5,8 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,8 +21,6 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
 
   private final RobotContainer robotContainer;
-
-  private PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
   public Robot() {
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -72,7 +68,7 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     // Set Brownout limit to 7.5 volts - change this in Constants
-    RobotController.setBrownoutVoltage(Constants.BROWNOUT_VOLTAGE_LIMIT);
+    RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
 
     robotContainer = new RobotContainer();
   }
@@ -80,19 +76,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    // Add voltage logging
-    Logger.recordOutput("Total output voltage", pdh.getVoltage());
-    Logger.recordOutput(
-        "Current to Front Left Drive", pdh.getCurrent(Constants.FRONT_L_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Front Right Drive", pdh.getCurrent(Constants.FRONT_R_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Back Left Drive", pdh.getCurrent(Constants.BACK_L_MOTOR_CHANNEL));
-    Logger.recordOutput(
-        "Current to Back Right Drive", pdh.getCurrent(Constants.BACK_R_MOTOR_CHANNEL));
-    Logger.recordOutput("Arm Base Left", Constants.ARM_BASE_L_MOTOR_CHANNEL);
-    Logger.recordOutput("Arm Base Right", Constants.ARM_BASE_R_MOTOR_CHANNEL);
   }
 
   @Override
@@ -121,24 +104,10 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-    // robotContainer.teleopInit();
   }
-
-  @Override
-  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
-
-  @Override
-  public void testPeriodic() {}
-
-  @Override
-  public void simulationInit() {}
-
-  @Override
-  public void simulationPeriodic() {}
 }

@@ -26,5 +26,6 @@ public interface GyroIO {
 
   public default void updateInputs(GyroIOInputs inputs) {}
 
+  /** Resets the angle of the gyro. */
   public default void resetRotation(Rotation2d rotation) {}
 }

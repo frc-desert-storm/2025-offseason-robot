@@ -16,7 +16,7 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          arm.setTargetAngle(Rotation2d.fromDegrees(45));
+          arm.setPivotTargetAngle(Rotation2d.fromDegrees(45));
         },
         arm);
   }
@@ -25,7 +25,7 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          arm.setTargetAngle(Rotation2d.fromDegrees(90));
+          arm.setPivotTargetAngle(Rotation2d.fromDegrees(90));
         },
         arm);
   }
@@ -34,10 +34,10 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double setpoint = arm.getTargetAngle();
+          double setpoint = arm.getPivotTargetAngle().getDegrees();
           Logger.recordOutput("arm/pivot", setpoint);
           if (setpoint <= 120) {
-            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint + 0.5));
+            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint + 0.5));
           }
         },
         arm);
@@ -47,10 +47,10 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double setpoint = arm.getTargetAngle();
+          double setpoint = arm.getPivotTargetAngle().getDegrees();
           Logger.recordOutput("arm/pivot", setpoint);
           if (setpoint >= -9.8) {
-            arm.setTargetAngle(Rotation2d.fromDegrees(setpoint - 0.5));
+            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint - 0.5));
           }
         },
         arm);
@@ -86,7 +86,7 @@ public class ArmCommands {
   public static Command testArm(Arm arm) {
     return Commands.run(
         () -> {
-          arm.setExtensionSetPoint(Units.inchesToMeters(8));
+          arm.setExtensionTargetLength(Units.inchesToMeters(8));
         },
         arm);
   }
@@ -95,9 +95,9 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double setpoint = arm.getExtensionSetPoint();
+          double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) <= 23.3) {
-            arm.setExtensionSetPoint(setpoint + Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint + Units.inchesToMeters(0.2));
           }
         },
         arm);
@@ -107,9 +107,9 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          double setpoint = arm.getExtensionSetPoint();
+          double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) >= 0.2) {
-            arm.setExtensionSetPoint(setpoint - Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint - Units.inchesToMeters(0.2));
           }
         },
         arm);

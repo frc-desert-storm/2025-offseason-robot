@@ -10,7 +10,7 @@ public interface PivotIO {
   class PivotIOInputs {
     public Rotation2d pivotTargetAngle = Rotation2d.kZero;
 
-      public Rotation2d pivotEncoderPosition = Rotation2d.kZero;
+    public Rotation2d pivotEncoderPosition = Rotation2d.kZero;
 
     public double pivotLeftPositionRad = 0.0;
     public double pivotLeftVelocityRadPerSec = 0.0;
@@ -23,13 +23,29 @@ public interface PivotIO {
     public double pivotRightCurrentAmps = 0.0;
   }
 
+  /** Returns the angle of the pivot. */
   default Rotation2d getTargetAngle() {
     return null;
   }
 
+  /**
+   * Sets the angle of the pivot.
+   *
+   * @param target The target angle to set.
+   */
   default void setTargetAngle(Rotation2d target) {}
 
+  /**
+   * Resets the pivot to the target angle.
+   *
+   * @param pose The target angle to reset to.
+   */
   default void resetPosition(Rotation2d pose) {}
+
+  /** Returns if it's at the pid goal. */
+  default boolean atGoal() {
+    return false;
+  }
 
   default void run() {}
 }

@@ -11,7 +11,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
 public class ExtensionIOSim implements ExtensionIO {
@@ -91,5 +90,10 @@ public class ExtensionIOSim implements ExtensionIO {
     extensionMotor.getEncoder().setPosition(positionInMeters);
 
     pid.setGoal(positionInMeters);
+  }
+
+  @Override
+  public boolean atGoal() {
+    return pid.atGoal();
   }
 }

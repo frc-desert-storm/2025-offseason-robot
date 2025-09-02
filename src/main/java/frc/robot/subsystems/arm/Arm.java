@@ -1,7 +1,5 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.subsystems.drive.DriveConstants.*;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -59,43 +57,72 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putData("Arm/Mech2d", mechanism);
   }
 
+  /** Updates the mechanism2d on the dashboard. */
   public void updateMechanism() {
-    mechanismArm.setAngle(
-        Rotation2d.fromRadians(pivotInputs.pivotLeftPositionRad));
-    mechanismWrist.setAngle(
-        Rotation2d.fromRadians(wristInputs.wristPositionRad));
+    mechanismArm.setAngle(Rotation2d.fromRadians(pivotInputs.pivotLeftPositionRad));
+    mechanismWrist.setAngle(Rotation2d.fromRadians(wristInputs.wristPositionRad));
     mechanismArm.setLength(extensionInputs.extensionPositionMeters + Units.inchesToMeters(29));
   }
 
-  public void setTargetAngle(Rotation2d target) {
+  /** Sets the pivot target angle. */
+  public void setPivotTargetAngle(Rotation2d target) {
     pivotIO.setTargetAngle(target);
   }
 
-  public double getTargetAngle() {
-    return pivotIO.getTargetAngle().getDegrees();
+  /** Gets the pivot target angle. */
+  public Rotation2d getPivotTargetAngle() {
+    return pivotIO.getTargetAngle();
   }
 
-  public void setWristTargetAngle(Rotation2d target) {
-    wristIO.setTargetAngle(target);
-  }
-
+  /** Resets the pivot to the target angle. */
   public void resetPivot(Rotation2d target) {
     pivotIO.resetPosition(target);
   }
 
-  public void setExtensionSetPoint(double setPointMeters) {
+  /** Sets the wrist target angle. */
+  public void setWristTargetAngle(Rotation2d target) {
+    wristIO.setTargetAngle(target);
+  }
+
+  /** Gets the wrist target angle. */
+  public Rotation2d getWristTargetAngle() {
+    return wristIO.getTargetAngle();
+  }
+
+  /** Resets the wrist to the target angle. */
+  public void resetWrist(Rotation2d target) {
+    wristIO.resetPosition(target);
+  }
+
+  /**
+   * sets the extension target position.
+   *
+   * @param setPointMeters the target position in meters
+   */
+  public void setExtensionTargetLength(double setPointMeters) {
     extensionIO.setTargetPosition(setPointMeters);
   }
 
-  public double getExtensionSetPoint() {
+  /**
+   * Gets the extension target position.
+   *
+   * @return the target position in meters
+   */
+  public double getExtensionTargetPosition() {
     return extensionIO.getTargetPosition();
   }
 
+  /**
+   * Resets the extension to the target position.
+   *
+   * @param target the target position in meters
+   */
   public void resetExtension(double target) {
     extensionIO.resetPosition(target);
   }
 
-  public void resetWrist(Rotation2d target) {
-    wristIO.resetPosition(target);
+  /** Returns true if the wrist, extension and pivot are at their goal. */
+  public boolean atGoal() {
+    return extensionIO.atGoal() && pivotIO.atGoal() && wristIO.atGoal();
   }
 }
