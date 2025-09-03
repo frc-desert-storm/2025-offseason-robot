@@ -12,13 +12,13 @@ public class ArmConstants {
   public static final boolean pivotLeftInverted = false;
   public static final boolean pivotRightInverted = true;
 
-  public static final int pivotReduction = 36;
+  public static final int pivotReduction = 37;
   public static final int pivotCurrentLimit = 60;
 
   public static final double pivotMaxAccel = 200.0;
-  public static final double pivotMaxVelo = 400.0;
+  public static final double pivotMaxVelo = 800.0;
 
-  public static final double pivotRealKp = 1.0;
+  public static final double pivotRealKp = 5.0;
   public static final double pivotRealKd = 0.0;
 
   public static final double pivotRealKv = 0.0;

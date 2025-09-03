@@ -37,7 +37,7 @@ public class PivotIOSparkMax implements PivotIO {
   public PivotIOSparkMax() {
     var config = new SparkMaxConfig();
     config
-        .idleMode(SparkBaseConfig.IdleMode.kCoast)
+        .idleMode(SparkBaseConfig.IdleMode.kBrake)
         .smartCurrentLimit(pivotCurrentLimit)
         .voltageCompensation(11.5);
     config
@@ -55,8 +55,6 @@ public class PivotIOSparkMax implements PivotIO {
     config.inverted(pivotRightInverted);
     pivotRightMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-
-    pid.setTolerance(0.25);
   }
 
   @Override
@@ -113,7 +111,7 @@ public class PivotIOSparkMax implements PivotIO {
     pivotLeftMotor.getEncoder().setPosition(pose.getRadians());
     pivotRightMotor.getEncoder().setPosition(pose.getRadians());
 
-    pid.setGoal(Units.degreesToRadians(-10));
+    pid.setGoal(Units.degreesToRadians(0));
   }
 
   @Override

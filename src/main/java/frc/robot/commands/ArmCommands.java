@@ -76,7 +76,6 @@ public class ArmCommands {
     return Commands.run(
         () -> {
           // Apply output
-          arm.resetPivot(Rotation2d.fromDegrees(-10));
           arm.resetWrist(Rotation2d.fromDegrees(-10));
           arm.resetExtension(0);
         },
