@@ -1,10 +1,6 @@
 package frc.robot.subsystems.arm.extension;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKa;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKd;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKp;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKv;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
@@ -14,6 +10,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
@@ -38,14 +36,19 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(extensionReduction) // Rotor Rotations -> Extension meters
-        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
+        .positionConversionFactor(
+            Units.inchesToMeters(1 / extensionReduction)) // Rotor Rotations -> Extension meters
+        .velocityConversionFactor(
+            (2 * Math.PI) / 60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
 
     config.inverted(extensionInverted);
+    extensionMotor.getEncoder().setPosition(0.0);
     extensionMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    pid.setTolerance(0);
   }
 
   @Override
@@ -59,12 +62,21 @@ public class ExtensionIOSparkMax implements ExtensionIO {
     double pidOutput = pid.calculate(extensionMotor.getEncoder().getPosition());
 
     double ffOutput =
-        ff.calculateWithVelocities(pid.getSetpoint().position, pid.getSetpoint().velocity);
+        // ff.calculateWithVelocities(
+        //     // extensionMotor.getEncoder().getVelocity(), pid.getSetpoint().velocity);
+        //     extensionMotor.getEncoder().getVelocity(), 0);
+
+        ff.calculate(extensionMotor.getEncoder().getVelocity());
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
     Logger.recordOutput("arm/extension/ff", ffOutput);
-    Logger.recordOutput("arm/extension/setpoint", pid.getGoal().position);
+    Logger.recordOutput("arm/extension/setpoint", pid.getSetpoint().position);
+    Logger.recordOutput("arm/extension/pid-setpointVelocity", pid.getSetpoint().velocity);
+    // Logger.recordOutput("arm/extension/pid-setpointVelocity", pid.getSetpoint().velocity);
 
+    SmartDashboard.putData(pid);
+
+    dont run this
     extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 

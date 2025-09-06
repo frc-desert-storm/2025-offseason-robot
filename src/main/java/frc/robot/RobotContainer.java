@@ -11,6 +11,7 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -109,6 +110,11 @@ public class RobotContainer {
     driverController
         .y()
         .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(60), Rotation2d.kZero, 0.0));
+    driverController
+        .rightBumper()
+        .onTrue(
+            new ScorePositionCommand(
+                arm, Rotation2d.fromDegrees(0), Rotation2d.kZero, Units.inchesToMeters(2.5)));
   }
 
   public Command getAutonomousCommand() {
