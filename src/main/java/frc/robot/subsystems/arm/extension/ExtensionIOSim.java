@@ -69,7 +69,7 @@ public class ExtensionIOSim implements ExtensionIO {
 
   @Override
   public double getTargetPosition() {
-    return pid.getSetpoint().position;
+    return pid.getGoal().position;
   }
 
   @Override
