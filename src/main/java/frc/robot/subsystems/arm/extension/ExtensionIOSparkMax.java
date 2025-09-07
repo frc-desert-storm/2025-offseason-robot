@@ -63,9 +63,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
     double ffOutput =
         // ff.calculateWithVelocities(
-        //     // extensionMotor.getEncoder().getVelocity(), pid.getSetpoint().velocity);
-        //     extensionMotor.getEncoder().getVelocity(), 0);
-
+        // extensionMotor.getEncoder().getVelocity(), pid.getSetpoint().velocity);
+        // extensionMotor.getEncoder().getVelocity(), 0);
         ff.calculate(extensionMotor.getEncoder().getVelocity());
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
@@ -76,7 +75,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
     SmartDashboard.putData(pid);
 
-    dont run this
+    // dont run this
     extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 
