@@ -61,27 +61,26 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void run() {
     double pidOutput = pid.calculate(extensionMotor.getEncoder().getPosition());
 
-    double ffOutput =
+    double ffOutput = ff.calculate(pid.getSetpoint().velocity);
         // ff.calculateWithVelocities(
         // extensionMotor.getEncoder().getVelocity(), pid.getSetpoint().velocity);
         // extensionMotor.getEncoder().getVelocity(), 0);
-        ff.calculate(extensionMotor.getEncoder().getVelocity());
+        
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
     Logger.recordOutput("arm/extension/ff", ffOutput);
     Logger.recordOutput("arm/extension/setpoint", pid.getSetpoint().position);
-    Logger.recordOutput("arm/extension/pid-setpointVelocity", pid.getSetpoint().velocity);
-    // Logger.recordOutput("arm/extension/pid-setpointVelocity", pid.getSetpoint().velocity);
+    Logger.recordOutput("arm/extension/setpointVelocity", pid.getSetpoint().velocity);
+    Logger.recordOutput("arm/extension/goal", pid.getGoal().position);
 
     SmartDashboard.putData(pid);
-
-    // dont run this
+    
     extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override
   public double getTargetPosition() {
-    return pid.getSetpoint().position;
+    return pid.getGoal().position;
   }
 
   @Override
