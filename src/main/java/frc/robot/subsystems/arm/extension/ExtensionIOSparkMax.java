@@ -10,7 +10,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
@@ -36,8 +35,7 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(
-            Units.inchesToMeters(1 / extensionReduction)) // Rotor Rotations -> Extension meters
+        .positionConversionFactor(1 / extensionReduction) // Rotor Rotations -> Extension meters
         .velocityConversionFactor(
             (2 * Math.PI) / 60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
         .uvwMeasurementPeriod(10)
@@ -61,8 +59,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void run() {
     double pidOutput = pid.calculate(extensionMotor.getEncoder().getPosition());
 
-    double ffOutput = // ff.calculate(pid.getSetpoint().velocity);
-        ff.calculate(extensionMotor.getEncoder().getVelocity());
+    double ffOutput = ff.calculate(pid.getSetpoint().velocity);
+    // ff.calculate(extensionMotor.getEncoder().getVelocity());
     // extensionMotor.getEncoder().getVelocity(), 0);
 
     Logger.recordOutput("arm/extension/pid", pidOutput);

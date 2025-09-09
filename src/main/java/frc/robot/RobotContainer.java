@@ -116,7 +116,7 @@ public class RobotContainer {
                 arm,
                 Rotation2d.fromDegrees(0),
                 Rotation2d.kZero,
-                0.1)); // Move pivot to 0 degrees, and extend by 10cm
+                10.0)); // Move pivot to 0 degrees, and extend by 10cm
     driverController
         .leftBumper()
         .onTrue(
