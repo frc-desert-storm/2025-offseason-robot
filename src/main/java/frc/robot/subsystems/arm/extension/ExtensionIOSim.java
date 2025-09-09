@@ -37,8 +37,8 @@ public class ExtensionIOSim implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(extensionReduction) // Rotor Rotations -> Extension meters
-        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
+        .positionConversionFactor(extensionReduction) // Rotor Rotations -> Extension inches
+        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Extension inches/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
 
@@ -48,8 +48,8 @@ public class ExtensionIOSim implements ExtensionIO {
   }
 
   @Override
-  public void setTargetPosition(double positionInMeters) {
-    pid.setGoal(positionInMeters);
+  public void setTargetPosition(double positionInInches) {
+    pid.setGoal(positionInInches);
     run();
   }
 
@@ -74,22 +74,22 @@ public class ExtensionIOSim implements ExtensionIO {
 
   @Override
   public void updateInputs(ExtensionIOInputs inputs) {
-    inputs.extensionPositionMeters = extensionMotor.getEncoder().getPosition();
-    inputs.extensionVelocityMetersPerSec = extensionMotor.getEncoder().getVelocity();
+    inputs.extensionPositionInches = extensionMotor.getEncoder().getPosition();
+    inputs.extensionVelocityInchesPerSec = extensionMotor.getEncoder().getVelocity();
     inputs.extensionAppliedVolts =
         extensionMotorSim.getAppliedOutput() * extensionMotorSim.getBusVoltage();
     inputs.extensionCurrentAmps = extensionMotorSim.getMotorCurrent();
 
-    inputs.extensionSetpointMeters = pid.getSetpoint().position;
+    inputs.extensionSetpointInches = pid.getSetpoint().position;
 
     run();
   }
 
   @Override
-  public void resetPosition(double positionInMeters) {
-    extensionMotor.getEncoder().setPosition(positionInMeters);
+  public void resetPosition(double positionInInches) {
+    extensionMotor.getEncoder().setPosition(positionInInches);
 
-    pid.setGoal(positionInMeters);
+    pid.setGoal(positionInInches);
   }
 
   @Override

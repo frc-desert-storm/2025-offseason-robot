@@ -61,7 +61,7 @@ public class Arm extends SubsystemBase {
   public void updateMechanism() {
     mechanismArm.setAngle(Rotation2d.fromRadians(pivotInputs.pivotLeftPositionRad));
     mechanismWrist.setAngle(Rotation2d.fromRadians(wristInputs.wristPositionRad));
-    mechanismArm.setLength(extensionInputs.extensionPositionMeters + Units.inchesToMeters(29));
+    mechanismArm.setLength(extensionInputs.extensionPositionInches + Units.inchesToMeters(29));
   }
 
   /** Sets the pivot target angle. */

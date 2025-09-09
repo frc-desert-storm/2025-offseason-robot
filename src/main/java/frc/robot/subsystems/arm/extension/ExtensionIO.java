@@ -7,10 +7,10 @@ public interface ExtensionIO {
 
   @AutoLog
   class ExtensionIOInputs {
-    public double extensionSetpointMeters = 0.0;
+    public double extensionSetpointInches = 0.0;
 
-    public double extensionPositionMeters = 0.0;
-    public double extensionVelocityMetersPerSec = 0.0;
+    public double extensionPositionInches = 0.0;
+    public double extensionVelocityInchesPerSec = 0.0;
     public double extensionAppliedVolts = 0.0;
     public double extensionCurrentAmps = 0.0;
   }
@@ -18,14 +18,14 @@ public interface ExtensionIO {
   /**
    * Sets the extension setpoint.
    *
-   * @param positionInMeters The position in meters to set.
+   * @param positionInInches The position in inches to set.
    */
-  default void setTargetPosition(double positionInMeters) {}
+  default void setTargetPosition(double positionInInches) {}
 
   /**
    * Gets the current target position.
    *
-   * @return The target position in meters.
+   * @return The target position in inches.
    */
   default double getTargetPosition() {
     return 0;
@@ -34,9 +34,9 @@ public interface ExtensionIO {
   /**
    * Resets the extension to the target position.
    *
-   * @param positionInMeters The target position in meters.
+   * @param positionInInches The target position in inches.
    */
-  default void resetPosition(double positionInMeters) {}
+  default void resetPosition(double positionInInches) {}
 
   /** Returns if it's at the pid goal. */
   default boolean atGoal() {

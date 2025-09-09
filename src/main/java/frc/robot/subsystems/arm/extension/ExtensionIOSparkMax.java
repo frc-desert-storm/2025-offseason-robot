@@ -50,8 +50,8 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   }
 
   @Override
-  public void setTargetPosition(double positionInMeters) {
-    pid.setGoal(positionInMeters);
+  public void setTargetPosition(double positionInInches) {
+    pid.setGoal(positionInInches);
     run();
   }
 
@@ -81,22 +81,22 @@ public class ExtensionIOSparkMax implements ExtensionIO {
 
   @Override
   public void updateInputs(ExtensionIOInputs inputs) {
-    inputs.extensionPositionMeters = extensionMotor.getEncoder().getPosition();
-    inputs.extensionVelocityMetersPerSec = extensionMotor.getEncoder().getVelocity();
+    inputs.extensionPositionInches = extensionMotor.getEncoder().getPosition();
+    inputs.extensionVelocityInchesPerSec = extensionMotor.getEncoder().getVelocity();
     inputs.extensionAppliedVolts =
         extensionMotor.getAppliedOutput() * extensionMotor.getBusVoltage();
     inputs.extensionCurrentAmps = extensionMotor.getOutputCurrent();
 
-    inputs.extensionSetpointMeters = pid.getSetpoint().position;
+    inputs.extensionSetpointInches = pid.getSetpoint().position;
 
     run();
   }
 
   @Override
-  public void resetPosition(double positionInMeters) {
-    extensionMotor.getEncoder().setPosition(positionInMeters);
+  public void resetPosition(double positionInInches) {
+    extensionMotor.getEncoder().setPosition(positionInInches);
 
-    pid.setGoal(positionInMeters);
+    pid.setGoal(positionInInches);
   }
 
   @Override
