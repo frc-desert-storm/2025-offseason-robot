@@ -43,17 +43,17 @@ public class ArmConstants {
   public static final double extensionReduction = 2.8125;
   public static final int extensionCurrentLimit = 60;
 
-  public static final double extensionMaxAccel = 100;
-  public static final double extensionMaxVelo = 200;
+  public static final double extensionMaxAccel = 150;
+  public static final double extensionMaxVelo = 250;
 
-  public static final double extensionRealKp = 32.0;
-  public static final double extensionRealKd = 0.0;
+  public static final double extensionRealKp = 30.0;
+  public static final double extensionRealKd = 1.5;
 
   public static final double extensionRealKv = 0.0;
-  public static final double extensionRealKs = 1.0;
+  public static final double extensionRealKs = 0.90625;
   public static final double extensionRealKa = 0.0;
 
-  public static final double extensionSimKp = 32.0;
+  public static final double extensionSimKp = 30.0;
   public static final double extensionSimKd = 0.0;
 
   public static final double extensionSimKv = 0.0;
