@@ -1,7 +1,6 @@
 package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 
 public class ArmConstants {
 
@@ -41,20 +40,20 @@ public class ArmConstants {
 
   public static final boolean extensionInverted = false;
 
-  public static final double extensionReduction = Units.inchesToMeters(2.8125);
-  public static final int extensionCurrentLimit = 30;
+  public static final double extensionReduction = 2.8125;
+  public static final int extensionCurrentLimit = 60;
 
-  public static final double extensionMaxAccel = 200.0;
-  public static final double extensionMaxVelo = 400.0;
+  public static final double extensionMaxAccel = 120.0;
+  public static final double extensionMaxVelo = 600.0;
 
-  public static final double extensionRealKp = 1.0;
+  public static final double extensionRealKp = 4.0;
   public static final double extensionRealKd = 0.0;
 
   public static final double extensionRealKv = 0.0;
-  public static final double extensionRealKs = 0.0;
+  public static final double extensionRealKs = 0.7;
   public static final double extensionRealKa = 0.0;
 
-  public static final double extensionSimKp = 1.0;
+  public static final double extensionSimKp = 30.0;
   public static final double extensionSimKd = 0.0;
 
   public static final double extensionSimKv = 0.0;

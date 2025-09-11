@@ -109,6 +109,22 @@ public class RobotContainer {
     driverController
         .y()
         .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(60), Rotation2d.kZero, 0.0));
+    driverController
+        .rightBumper()
+        .onTrue(
+            new ScorePositionCommand(
+                arm,
+                Rotation2d.fromDegrees(0),
+                Rotation2d.kZero,
+                10.0)); // Move pivot to 0 degrees, and extend by 10cm
+    driverController
+        .leftBumper()
+        .onTrue(
+            new ScorePositionCommand(
+                arm,
+                Rotation2d.fromDegrees(0),
+                Rotation2d.kZero,
+                0)); // Move pivot to 0 degrees, and go to 0cm
   }
 
   public Command getAutonomousCommand() {

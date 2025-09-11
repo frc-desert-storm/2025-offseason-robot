@@ -70,7 +70,7 @@ public class WristIOSim implements WristIO {
 
   @Override
   public Rotation2d getTargetAngle() {
-    return Rotation2d.fromRadians(pid.getSetpoint().position);
+    return Rotation2d.fromRadians(pid.getGoal().position);
   }
 
   @Override

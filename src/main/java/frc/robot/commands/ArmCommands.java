@@ -96,7 +96,7 @@ public class ArmCommands {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) <= 23.3) {
-            arm.setExtensionTargetLength(setpoint + Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint + 0.01);
           }
         },
         arm);
@@ -108,7 +108,7 @@ public class ArmCommands {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) >= 0.2) {
-            arm.setExtensionTargetLength(setpoint - Units.inchesToMeters(0.2));
+            arm.setExtensionTargetLength(setpoint - 0.01);
           }
         },
         arm);

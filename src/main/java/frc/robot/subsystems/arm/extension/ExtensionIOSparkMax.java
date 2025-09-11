@@ -1,10 +1,6 @@
 package frc.robot.subsystems.arm.extension;
 
 import static frc.robot.subsystems.arm.ArmConstants.*;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKa;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKd;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKp;
-import static frc.robot.subsystems.arm.ArmConstants.extensionRealKv;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel;
@@ -14,6 +10,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.littletonrobotics.junction.Logger;
 
 public class ExtensionIOSparkMax implements ExtensionIO {
@@ -38,19 +35,23 @@ public class ExtensionIOSparkMax implements ExtensionIO {
         .voltageCompensation(11.5);
     config
         .encoder
-        .positionConversionFactor(extensionReduction) // Rotor Rotations -> Extension meters
-        .velocityConversionFactor(60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
+        .positionConversionFactor(1 / extensionReduction) // Rotor Rotations -> Extension meters
+        .velocityConversionFactor(
+            (2 * Math.PI) / 60.0 / extensionReduction) // Rotor RPM -> Extension meters/Sec
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
 
     config.inverted(extensionInverted);
+    extensionMotor.getEncoder().setPosition(0.0);
     extensionMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    pid.setTolerance(0);
   }
 
   @Override
-  public void setTargetPosition(double positionInMeters) {
-    pid.setGoal(positionInMeters);
+  public void setTargetPosition(double positionInInches) {
+    pid.setGoal(positionInInches);
     run();
   }
 
@@ -58,39 +59,44 @@ public class ExtensionIOSparkMax implements ExtensionIO {
   public void run() {
     double pidOutput = pid.calculate(extensionMotor.getEncoder().getPosition());
 
-    double ffOutput =
-        ff.calculateWithVelocities(pid.getSetpoint().position, pid.getSetpoint().velocity);
+    double ffOutput = ff.calculate(pid.getSetpoint().velocity);
+    // ff.calculate(extensionMotor.getEncoder().getVelocity());
+    // extensionMotor.getEncoder().getVelocity(), 0);
 
     Logger.recordOutput("arm/extension/pid", pidOutput);
     Logger.recordOutput("arm/extension/ff", ffOutput);
-    Logger.recordOutput("arm/extension/setpoint", pid.getGoal().position);
+    Logger.recordOutput("arm/extension/setpoint", pid.getSetpoint().position);
+    Logger.recordOutput("arm/extension/setpointVelocity", pid.getSetpoint().velocity);
+    Logger.recordOutput("arm/extension/goal", pid.getGoal().position);
+
+    SmartDashboard.putData(pid);
 
     extensionMotor.setVoltage(pidOutput + ffOutput);
   }
 
   @Override
   public double getTargetPosition() {
-    return pid.getSetpoint().position;
+    return pid.getGoal().position;
   }
 
   @Override
   public void updateInputs(ExtensionIOInputs inputs) {
-    inputs.extensionPositionMeters = extensionMotor.getEncoder().getPosition();
-    inputs.extensionVelocityMetersPerSec = extensionMotor.getEncoder().getVelocity();
+    inputs.extensionPositionInches = extensionMotor.getEncoder().getPosition();
+    inputs.extensionVelocityInchesPerSec = extensionMotor.getEncoder().getVelocity();
     inputs.extensionAppliedVolts =
         extensionMotor.getAppliedOutput() * extensionMotor.getBusVoltage();
     inputs.extensionCurrentAmps = extensionMotor.getOutputCurrent();
 
-    inputs.extensionSetpointMeters = pid.getSetpoint().position;
+    inputs.extensionSetpointInches = pid.getSetpoint().position;
 
     run();
   }
 
   @Override
-  public void resetPosition(double positionInMeters) {
-    extensionMotor.getEncoder().setPosition(positionInMeters);
+  public void resetPosition(double positionInInches) {
+    extensionMotor.getEncoder().setPosition(positionInInches);
 
-    pid.setGoal(positionInMeters);
+    pid.setGoal(positionInInches);
   }
 
   @Override
