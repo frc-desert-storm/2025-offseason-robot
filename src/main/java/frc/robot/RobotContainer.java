@@ -12,10 +12,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ScorePositionCommand;
+import frc.robot.commands.ExtensionPositionCommand;
+import frc.robot.commands.PivotPositionCommand;
+import frc.robot.commands.WristPositionCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.extension.ExtensionIO;
 import frc.robot.subsystems.arm.extension.ExtensionIOSim;
@@ -96,35 +99,19 @@ public class RobotContainer {
     // driverController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
     // driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
+    
+    
+    driverController.a().onTrue(new SequentialCommandGroup(
+        new ExtensionPositionCommand(arm,0.0),
+        new PivotPositionCommand(arm,Rotation2d.fromDegrees(50)),
+        new WristPositionCommand(arm,Rotation2d.fromDegrees(315))
+    )
+        .andThen(
+        new ExtensionPositionCommand(arm,0.0),
+        new PivotPositionCommand(arm,Rotation2d.fromDegrees(40)),
+        new WristPositionCommand(arm,Rotation2d.fromDegrees(45))
+    ));
 
-    driverController
-        .a()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(90), Rotation2d.kZero, 0.0));
-    driverController
-        .b()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(45), Rotation2d.kZero, 0.0));
-    driverController
-        .x()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(0), Rotation2d.kZero, 0.0));
-    driverController
-        .y()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(60), Rotation2d.kZero, 0.0));
-    driverController
-        .rightBumper()
-        .onTrue(
-            new ScorePositionCommand(
-                arm,
-                Rotation2d.fromDegrees(0),
-                Rotation2d.kZero,
-                10.0)); // Move pivot to 0 degrees, and extend by 10cm
-    driverController
-        .leftBumper()
-        .onTrue(
-            new ScorePositionCommand(
-                arm,
-                Rotation2d.fromDegrees(0),
-                Rotation2d.kZero,
-                0)); // Move pivot to 0 degrees, and go to 0cm
   }
 
   public Command getAutonomousCommand() {

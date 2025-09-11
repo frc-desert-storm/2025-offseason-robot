@@ -97,10 +97,10 @@ public class Arm extends SubsystemBase {
   /**
    * sets the extension target position.
    *
-   * @param setPointMeters the target position in meters
+   * @param setPointInches the target position in meters
    */
-  public void setExtensionTargetLength(double setPointMeters) {
-    extensionIO.setTargetPosition(setPointMeters);
+  public void setExtensionTargetLength(double setPointInches) {
+    extensionIO.setTargetPosition(setPointInches);
   }
 
   /**
@@ -124,5 +124,17 @@ public class Arm extends SubsystemBase {
   /** Returns true if the wrist, extension and pivot are at their goal. */
   public boolean atGoal() {
     return extensionIO.atGoal() && pivotIO.atGoal() && wristIO.atGoal();
+  }
+  /** Returns true if the wrist is at its goal. */
+  public boolean atWristGoal() {
+    return wristIO.atGoal();
+  }
+  /** Returns true if the pivot is at its goal. */
+  public boolean atPivotGoal() {
+    return pivotIO.atGoal();
+  }
+  /** Returns true if the extension is at its goal. */
+  public boolean atExtensionGoal() {
+    return extensionIO.atGoal();
   }
 }
