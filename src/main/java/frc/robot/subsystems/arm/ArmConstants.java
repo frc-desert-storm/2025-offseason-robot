@@ -21,7 +21,7 @@ public class ArmConstants {
   public static final double pivotRealKd = 0.0;
 
   public static final double pivotRealKv = 0.0;
-  public static final double pivotRealKg = 0.8;
+  public static final double pivotRealKg = 0.9;
   public static final double pivotRealKs = 0.0;
   public static final double pivotRealKa = 0.0;
 
@@ -67,13 +67,13 @@ public class ArmConstants {
 
   public static final boolean wristInverted = false;
 
-  public static final int wristReduction = 4;
+  public static final double wristReduction = 11.57;
   public static final int wristCurrentLimit = 60;
 
   public static final double wristMaxAccel = 200.0;
   public static final double wristMaxVelo = 400.0;
 
-  public static final double wristRealKp = 1.0;
+  public static final double wristRealKp = 3.0;
   public static final double wristRealKd = 0.0;
 
   public static final double wristRealKv = 0.0;
@@ -88,6 +88,8 @@ public class ArmConstants {
   public static final double wristSimKg = 1.0;
   public static final double wristSimKs = 0.0;
   public static final double wristSimKa = 0.0;
+
+  public static final int coralCanId = 31;
 
   public static final DCMotor wristGearbox = DCMotor.getNEO(1).withReduction(wristReduction);
 }

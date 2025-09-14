@@ -10,7 +10,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class CoralIOSparkMax implements CoralIO {
-  private final SparkMax motor = new SparkMax(31, SparkLowLevel.MotorType.kBrushless);
+  private final SparkMax motor = new SparkMax(coralCanId, SparkLowLevel.MotorType.kBrushless);
   private final DigitalInput limitSwitch = new DigitalInput(0);
 
   public CoralIOSparkMax() {
@@ -24,6 +24,8 @@ public class CoralIOSparkMax implements CoralIO {
     config.inverted(wristInverted);
     motor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    setVoltage(0.5);
   }
 
   @Override

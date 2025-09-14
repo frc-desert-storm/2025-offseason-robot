@@ -104,20 +104,80 @@ public class RobotContainer {
     // driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
 
+    // driverController
+    //     .a()
+    //     .whileTrue(
+    //         new SequentialCommandGroup(
+    //                 new ExtensionPositionCommand(arm, 0.0),
+    //                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(50)),
+    //                 new WristPositionCommand(arm, Rotation2d.fromDegrees(315)))
+    //             .andThen(
+    //                 new ExtensionPositionCommand(arm, 0.0),
+    //                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(40)),
+    //                 new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+
+    // driverController
+    //     .b()
+    //     .onTrue(
+    //         new SequentialCommandGroup(new PivotPositionCommand(arm,
+    // Rotation2d.fromDegrees(45))));
+    // driverController
+    //     .x()
+    //     .onTrue(
+    //         new SequentialCommandGroup(new WristPositionCommand(arm,
+    // Rotation2d.fromDegrees(45))));
+    // driverController.y().onTrue(new SequentialCommandGroup(new ExtensionPositionCommand(arm,
+    // 12)));
+
+    driverController
+        .leftTrigger()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(3.56)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
+    driverController
+        .x()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(1.25)),
+                new ExtensionPositionCommand(arm, 3.0)));
+
+    driverController
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(257)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
+    driverController
+        .y()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(2.44)),
+                new ExtensionPositionCommand(arm, 0.0)))
+        .onFalse(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(10)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
     driverController
         .a()
         .onTrue(
             new SequentialCommandGroup(
-                    new ExtensionPositionCommand(arm, 0.0),
-                    new PivotPositionCommand(arm, Rotation2d.fromDegrees(50)),
-                    new WristPositionCommand(arm, Rotation2d.fromDegrees(315)))
-                .andThen(
-                    new ExtensionPositionCommand(arm, 0.0),
-                    new PivotPositionCommand(arm, Rotation2d.fromDegrees(40)),
-                    new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(140)),
+                new ExtensionPositionCommand(arm, 0.0)));
 
-    driverController.rightTrigger().onTrue(new CoralOuttakeCommand(coral));
-    driverController.rightTrigger().onTrue(new CoralIntakeCommand(coral));
+    driverController.start().onTrue(DriveCommands.resetPose(drive));
+
+    driverController.rightTrigger().whileTrue(new CoralOuttakeCommand(coral));
+    driverController.leftTrigger().whileTrue(new CoralIntakeCommand(coral));
   }
 
   public Command getAutonomousCommand() {

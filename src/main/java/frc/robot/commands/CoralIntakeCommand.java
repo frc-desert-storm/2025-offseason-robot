@@ -17,11 +17,22 @@ public class CoralIntakeCommand extends Command {
 
   @Override
   public void execute() {
-    coral.setVoltage(-6.0);
+    coral.setVoltage(3);
   }
 
   @Override
-  public boolean isFinished() {
-    return coral.getCurrent() > 4;
+  public void end(boolean idk) {
+    coral.setVoltage(.5);
   }
 }
+
+// public class CoralIntakeCommand extends SequentialCommandGroup {
+//   public CoralIntakeCommand(Coral coral) {
+//     addCommands(
+//         new CoralVoltageCommand(coral, 3.0),
+//         new WaitCommand(0.1),
+//         new WaitUntilCommand(() -> coral.getCurrent() > 40),
+//         new CoralVoltageCommand(coral, 0.0));
+//     addRequirements(coral);
+//   }
+// }

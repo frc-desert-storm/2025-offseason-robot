@@ -49,6 +49,9 @@ public class WristIOSparkMax implements WristIO {
     config.inverted(wristInverted);
     wristMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    wristMotor.getEncoder().setPosition(0);
+    pid.setTolerance(0.2);
   }
 
   @Override
@@ -91,7 +94,7 @@ public class WristIOSparkMax implements WristIO {
   public void resetPosition(Rotation2d pose) {
     wristMotor.getEncoder().setPosition(pose.getRadians());
 
-    pid.setGoal(Units.degreesToRadians(-10));
+    pid.setGoal(0);
   }
 
   @Override
