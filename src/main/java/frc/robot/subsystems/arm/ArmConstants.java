@@ -90,6 +90,8 @@ public class ArmConstants {
   public static final double wristSimKa = 0.0;
 
   public static final int coralCanId = 31;
+  public static final boolean coralInverted = false;
+  public static final int coralCurrentLimit = 60;
 
   public static final DCMotor wristGearbox = DCMotor.getNEO(1).withReduction(wristReduction);
 }

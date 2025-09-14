@@ -17,15 +17,15 @@ public class CoralIOSparkMax implements CoralIO {
     var config = new SparkMaxConfig();
     config
         .idleMode(SparkBaseConfig.IdleMode.kCoast)
-        .smartCurrentLimit(wristCurrentLimit)
+        .smartCurrentLimit(coralCurrentLimit)
         .voltageCompensation(11.5);
     config.encoder.uvwMeasurementPeriod(10).uvwAverageDepth(2);
 
-    config.inverted(wristInverted);
+    config.inverted(coralInverted);
     motor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
-    setVoltage(0.5);
+    setVoltage(0.5); // Holds the coral in place
   }
 
   @Override
