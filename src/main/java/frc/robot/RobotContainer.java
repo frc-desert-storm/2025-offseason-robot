@@ -12,10 +12,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ScorePositionCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.extension.ExtensionIO;
 import frc.robot.subsystems.arm.extension.ExtensionIOSim;
@@ -26,6 +26,9 @@ import frc.robot.subsystems.arm.pivot.PivotIOSparkMax;
 import frc.robot.subsystems.arm.wrist.WristIO;
 import frc.robot.subsystems.arm.wrist.WristIOSim;
 import frc.robot.subsystems.arm.wrist.WristIOSparkMax;
+import frc.robot.subsystems.coral.Coral;
+import frc.robot.subsystems.coral.CoralIO;
+import frc.robot.subsystems.coral.CoralIOSparkMax;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.gyro.GyroIO;
 import frc.robot.subsystems.drive.gyro.GyroIOPigeon2;
@@ -35,6 +38,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Arm arm;
+  private final Coral coral;
 
   // Controllers
   private final CommandXboxController driverController =
@@ -52,18 +56,21 @@ public class RobotContainer {
         // Real robot, instantiate hardware IO implementations
         drive = new Drive(new DriveIOSparkMax(), new GyroIOPigeon2());
         arm = new Arm(new ExtensionIOSparkMax(), new PivotIOSparkMax(), new WristIOSparkMax());
+        coral = new Coral(new CoralIOSparkMax());
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new Drive(new DriveIOSim(), new GyroIO() {});
         arm = new Arm(new ExtensionIOSim(), new PivotIOSim(), new WristIOSim());
+        coral = new Coral(new CoralIOSparkMax());
         break;
 
       default:
         // Replayed robot, disable IO implementations
         drive = new Drive(new DriveIO() {}, new GyroIO() {});
         arm = new Arm(new ExtensionIO() {}, new PivotIO() {}, new WristIO() {});
+        coral = new Coral(new CoralIO() {});
         break;
     }
 
@@ -97,34 +104,80 @@ public class RobotContainer {
     // driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
     // driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
 
+    // driverController
+    //     .a()
+    //     .whileTrue(
+    //         new SequentialCommandGroup(
+    //                 new ExtensionPositionCommand(arm, 0.0),
+    //                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(50)),
+    //                 new WristPositionCommand(arm, Rotation2d.fromDegrees(315)))
+    //             .andThen(
+    //                 new ExtensionPositionCommand(arm, 0.0),
+    //                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(40)),
+    //                 new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+
+    // driverController
+    //     .b()
+    //     .onTrue(
+    //         new SequentialCommandGroup(new PivotPositionCommand(arm,
+    // Rotation2d.fromDegrees(45))));
+    // driverController
+    //     .x()
+    //     .onTrue(
+    //         new SequentialCommandGroup(new WristPositionCommand(arm,
+    // Rotation2d.fromDegrees(45))));
+    // driverController.y().onTrue(new SequentialCommandGroup(new ExtensionPositionCommand(arm,
+    // 12)));
+
     driverController
-        .a()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(90), Rotation2d.kZero, 0.0));
-    driverController
-        .b()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(45), Rotation2d.kZero, 0.0));
+        .leftTrigger()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(3.56)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
     driverController
         .x()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(0), Rotation2d.kZero, 0.0));
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(1.25)),
+                new ExtensionPositionCommand(arm, 3.0)));
+
+    driverController
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(257)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
     driverController
         .y()
-        .onTrue(new ScorePositionCommand(arm, Rotation2d.fromDegrees(60), Rotation2d.kZero, 0.0));
-    driverController
-        .rightBumper()
         .onTrue(
-            new ScorePositionCommand(
-                arm,
-                Rotation2d.fromDegrees(0),
-                Rotation2d.kZero,
-                10.0)); // Move pivot to 0 degrees, and extend by 10cm
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+                new WristPositionCommand(arm, Rotation2d.fromRadians(2.44)),
+                new ExtensionPositionCommand(arm, 0.0)))
+        .onFalse(
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(10)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
     driverController
-        .leftBumper()
+        .a()
         .onTrue(
-            new ScorePositionCommand(
-                arm,
-                Rotation2d.fromDegrees(0),
-                Rotation2d.kZero,
-                0)); // Move pivot to 0 degrees, and go to 0cm
+            new SequentialCommandGroup(
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(140)),
+                new ExtensionPositionCommand(arm, 0.0)));
+
+    driverController.start().onTrue(DriveCommands.resetPose(drive));
+
+    driverController.rightTrigger().whileTrue(new CoralOuttakeCommand(coral));
+    driverController.leftTrigger().whileTrue(new CoralIntakeCommand(coral));
   }
 
   public Command getAutonomousCommand() {
