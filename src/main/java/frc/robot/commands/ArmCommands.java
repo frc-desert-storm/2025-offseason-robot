@@ -5,6 +5,10 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.arm.Arm;
+
+import static frc.robot.subsystems.arm.ArmConstants.maxExtensionInches;
+import static frc.robot.subsystems.arm.ArmConstants.minExtensionInches;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ArmCommands {
@@ -95,7 +99,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
-          if (Units.metersToInches(setpoint) <= 23.3) {
+          if (Units.metersToInches(setpoint) <= maxExtensionInches) {
             arm.setExtensionTargetLength(setpoint + 0.01);
           }
         },
@@ -107,7 +111,7 @@ public class ArmCommands {
         () -> {
           // Apply output
           double setpoint = arm.getExtensionTargetPosition();
-          if (Units.metersToInches(setpoint) >= 0.2) {
+          if (Units.metersToInches(setpoint) >= minExtensionInches) {
             arm.setExtensionTargetLength(setpoint - 0.01);
           }
         },
