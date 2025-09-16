@@ -10,9 +10,7 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
@@ -129,50 +127,56 @@ public class RobotContainer {
     // driverController.y().onTrue(new SequentialCommandGroup(new ExtensionPositionCommand(arm,
     // 12)));
 
-    driverController
-        .leftTrigger()
-        .onTrue(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)),
-                new WristPositionCommand(arm, Rotation2d.fromRadians(3.56)),
-                new ExtensionPositionCommand(arm, 0.0)));
+    //    driverController
+    //        .leftTrigger()
+    //        .onTrue(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)),
+    //                new WristPositionCommand(arm, Rotation2d.fromRadians(3.56)),
+    //                new ExtensionPositionCommand(arm, 0.0)));
+    //
+    //    driverController
+    //        .x()
+    //        .onTrue(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
+    //                new WristPositionCommand(arm, Rotation2d.fromRadians(1.25)),
+    //                new ExtensionPositionCommand(arm, 3.0)));
+    //
+    //    driverController
+    //        .b()
+    //        .onTrue(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)),
+    //                new WristPositionCommand(arm, Rotation2d.fromDegrees(257)),
+    //                new ExtensionPositionCommand(arm, 0.0)));
+    //
+    //    driverController
+    //        .y()
+    //        .onTrue(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+    //                new WristPositionCommand(arm, Rotation2d.fromRadians(2.44)),
+    //                new ExtensionPositionCommand(arm, 0.0)))
+    //        .onFalse(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
+    //                new WristPositionCommand(arm, Rotation2d.fromDegrees(10)),
+    //                new ExtensionPositionCommand(arm, 0.0)));
+    //
+    //    driverController
+    //        .a()
+    //        .onTrue(
+    //            new SequentialCommandGroup(
+    //                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20)),
+    //                new WristPositionCommand(arm, Rotation2d.fromDegrees(140)),
+    //                new ExtensionPositionCommand(arm, 0.0)));
+    driverController.leftTrigger().onTrue(ScoringConstants.Intake.getCommand(arm));
 
-    driverController
-        .x()
-        .onTrue(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
-                new WristPositionCommand(arm, Rotation2d.fromRadians(1.25)),
-                new ExtensionPositionCommand(arm, 3.0)));
-
-    driverController
-        .b()
-        .onTrue(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)),
-                new WristPositionCommand(arm, Rotation2d.fromDegrees(257)),
-                new ExtensionPositionCommand(arm, 0.0)));
-
-    driverController
-        .y()
-        .onTrue(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
-                new WristPositionCommand(arm, Rotation2d.fromRadians(2.44)),
-                new ExtensionPositionCommand(arm, 0.0)))
-        .onFalse(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromRadians(.385)),
-                new WristPositionCommand(arm, Rotation2d.fromDegrees(10)),
-                new ExtensionPositionCommand(arm, 0.0)));
-
-    driverController
-        .a()
-        .onTrue(
-            new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20)),
-                new WristPositionCommand(arm, Rotation2d.fromDegrees(140)),
-                new ExtensionPositionCommand(arm, 0.0)));
+    driverController.a().onTrue(ScoringConstants.L1.getCommand(arm));
+    driverController.b().onTrue(ScoringConstants.L2.getCommand(arm));
+    driverController.x().onTrue(ScoringConstants.L3.getCommand(arm));
+    driverController.povLeft().onTrue(ScoringConstants.GroundIntake.getCommand(arm));
 
     driverController.start().onTrue(DriveCommands.resetPose(drive));
 
