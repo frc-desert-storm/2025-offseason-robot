@@ -5,6 +5,79 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "pivot to L2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wrist to L2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "extension to L2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Third"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Fourth"
+          }
+        },
+        {
           "type": "sequential",
           "data": {
             "commands": [
@@ -24,15 +97,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "Center Path"
+            "pathName": "Left Fifth"
           }
         },
         {
@@ -50,7 +117,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Second"
+            "pathName": "Left Sixth"
           }
         },
         {
@@ -81,92 +148,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.25
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center Third"
+            "pathName": "Left Seventh"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "score"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Fourth"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Fifth"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "de-algae pivot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "de-algae wrist 1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Sixth"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "de-algae wrist 2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
           }
         }
       ]

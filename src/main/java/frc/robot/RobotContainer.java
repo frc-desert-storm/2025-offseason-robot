@@ -92,8 +92,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("wrist to L3", new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)));
     NamedCommands.registerCommand("de-algae wrist 1", new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)));
     NamedCommands.registerCommand("de-algae wrist 2", new WristPositionCommand(arm, Rotation2d.fromDegrees(10)));
+    NamedCommands.registerCommand("wrist to L2", new WristPositionCommand(arm, Rotation2d.fromDegrees(257)));
 
     NamedCommands.registerCommand("extension to L3", new ExtensionPositionCommand(arm, 3.0));
+    NamedCommands.registerCommand("extension to L2", new ExtensionPositionCommand(arm, 0.0));
 
     NamedCommands.registerCommand("score", new CoralOuttakeCommand(coral));
     NamedCommands.registerCommand("intake", new CoralIntakeCommand(coral));
@@ -139,7 +141,7 @@ public class RobotContainer {
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)),
                 new ExtensionPositionCommand(arm, 3.0)));
 
-    // Move to score position for L3
+    // Move to score position for L2
     // DOES NOT SCORE, ONLY MOVES TO POSITION
     driverController
         .b()
