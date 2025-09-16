@@ -117,6 +117,10 @@ public class Drive extends SubsystemBase {
     gyroIO.resetRotation(pose.getRotation());
   }
 
+  public double getPose() {
+    return gyroIO.getRotation();
+  }
+
   /** Drives the robot using the specified ChassisSpeeds. Mostly for pathplanner */
   public void driveRobotRelative(ChassisSpeeds speeds) {
     var mecanumDriveWheelSpeeds = m_kinematics.toWheelSpeeds(speeds);

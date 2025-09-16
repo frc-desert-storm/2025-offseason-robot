@@ -60,8 +60,9 @@ public class ArmConstants {
   public static final double extensionSimKs = 0.0;
   public static final double extensionSimKa = 0.0;
 
-  public static final double maxExtensionInches = 23.3;  // Estimate from CAD, UPDATE
-  public static final double minExtensionInches = 0.2;  // Guestimation of reasonable point to stop retracting arm
+  public static final double maxExtensionInches = 23.3; // Estimate from CAD, UPDATE
+  public static final double minExtensionInches =
+      0.2; // Guestimation of reasonable point to stop retracting arm
 
   public static final DCMotor extensionGearbox =
       DCMotor.getNEO(1).withReduction(extensionReduction);

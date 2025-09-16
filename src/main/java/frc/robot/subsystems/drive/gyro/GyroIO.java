@@ -28,4 +28,6 @@ public interface GyroIO {
 
   /** Resets the angle of the gyro. */
   public default void resetRotation(Rotation2d rotation) {}
+
+  public default double getRotation() { return 0;}
 }

@@ -1,0 +1,159 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "de-algae pivot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "de-algae wrist 1"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "de-algae wrist 2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Second"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "pivot to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wrist to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "extension to L3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Third"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Fourth"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Fifth"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "rotate 60 degrees Right"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Sixth"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center Seventh"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

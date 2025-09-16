@@ -9,6 +9,7 @@ import static frc.robot.subsystems.drive.DriveConstants.kMaxAngularSpeed;
 import static frc.robot.subsystems.drive.DriveConstants.kMaxLinearSpeed;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,7 +46,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.driverControllerPort);
 
   private final CommandXboxController operatorController =
-    new CommandXboxController(OperatorConstants.operatorControllerPort);
+      new CommandXboxController(OperatorConstants.operatorControllerPort);
 
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(5);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(5);
@@ -82,6 +83,24 @@ public class RobotContainer {
 
     autoChooser.addOption("simple", DriveCommands.auto(drive));
 
+    // Pathplanner Named Commands
+    NamedCommands.registerCommand("pivot to L3", new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)));
+    NamedCommands.registerCommand("pivot to Intake", new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)));
+    NamedCommands.registerCommand("pivot to L2", new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)));
+    NamedCommands.registerCommand("de-algae pivot", new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)));
+
+    NamedCommands.registerCommand("wrist to L3", new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)));
+    NamedCommands.registerCommand("de-algae wrist 1", new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)));
+    NamedCommands.registerCommand("de-algae wrist 2", new WristPositionCommand(arm, Rotation2d.fromDegrees(10)));
+
+    NamedCommands.registerCommand("extension to L3", new ExtensionPositionCommand(arm, 3.0));
+
+    NamedCommands.registerCommand("score", new CoralOuttakeCommand(coral));
+    NamedCommands.registerCommand("intake", new CoralIntakeCommand(coral));
+
+    NamedCommands.registerCommand("rotate 60 degrees Right", new AutoRotateCommand(drive, 0.5, 60));
+    NamedCommands.registerCommand("rotate 60 degrees Left", new AutoRotateCommand(drive, -0.5, -60));
+
     // Configure the button bindings
     configureBindings();
   }
@@ -96,7 +115,7 @@ public class RobotContainer {
             () -> -xSpeedLimiter.calculate(driverController.getLeftY()) * kMaxLinearSpeed,
             () -> -ySpeedLimiter.calculate(driverController.getLeftX()) * kMaxLinearSpeed,
             () -> -rotSpeedLimiter.calculate(driverController.getRightX()) * kMaxAngularSpeed));
-        
+
     // Reset Gyro
     driverController.start().onTrue(DriveCommands.resetPose(drive));
 
@@ -109,7 +128,7 @@ public class RobotContainer {
                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(203.973)),
                 new ExtensionPositionCommand(arm, 0.0)));
-    
+
     // Move to score position for L3
     // DOES NOT SCORE, ONLY MOVES TO POSITION
     driverController
@@ -119,7 +138,7 @@ public class RobotContainer {
                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)),
                 new ExtensionPositionCommand(arm, 3.0)));
-    
+
     // Move to score position for L3
     // DOES NOT SCORE, ONLY MOVES TO POSITION
     driverController
@@ -156,14 +175,13 @@ public class RobotContainer {
                 new ExtensionPositionCommand(arm, 0.0)));
 
     // See what happens w/ out this because why do we have the same command twice?
-    //driverController.start().onTrue(DriveCommands.resetPose(drive));
+    // driverController.start().onTrue(DriveCommands.resetPose(drive));
 
     // Spins manipulator wheels for scoring
     driverController.rightTrigger().whileTrue(new CoralOuttakeCommand(coral));
 
     // Spins manipulator wheels for intaking
     driverController.leftTrigger().whileTrue(new CoralIntakeCommand(coral));
-
 
     // OPERATOR CONTROLS
     operatorController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
@@ -172,45 +190,44 @@ public class RobotContainer {
     operatorController.leftBumper().whileTrue(ArmCommands.retractArm(arm));
     operatorController.rightBumper().whileTrue(ArmCommands.extendArm(arm));
 
-
     // Previous Controls
-    
-     /*driverController.a().onTrue(ArmCommands.intake(arm));
-     driverController.b().onTrue(ArmCommands.resetArmPose(arm));
-     driverController.x().onTrue(ArmCommands.score(arm));
-     driverController.y().whileTrue(ArmCommands.extendArm(arm));
 
-     driverController.leftBumper().onTrue(ArmCommands.scoreCommand(arm));
-     driverController.rightBumper().onTrue(ArmCommands.intakeCommand(arm));
-     driverController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
-     driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
-     driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
+    /*driverController.a().onTrue(ArmCommands.intake(arm));
+    driverController.b().onTrue(ArmCommands.resetArmPose(arm));
+    driverController.x().onTrue(ArmCommands.score(arm));
+    driverController.y().whileTrue(ArmCommands.extendArm(arm));
 
-     driverController
-         .a()
-         .whileTrue(
-             new SequentialCommandGroup(
-                     new ExtensionPositionCommand(arm, 0.0),
-                     new PivotPositionCommand(arm, Rotation2d.fromDegrees(50)),
-                     new WristPositionCommand(arm, Rotation2d.fromDegrees(315)))
-                 .andThen(
-                     new ExtensionPositionCommand(arm, 0.0),
-                     new PivotPositionCommand(arm, Rotation2d.fromDegrees(40)),
-                     new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+    driverController.leftBumper().onTrue(ArmCommands.scoreCommand(arm));
+    driverController.rightBumper().onTrue(ArmCommands.intakeCommand(arm));
+    driverController.rightTrigger(.1).whileTrue(ArmCommands.moveArmUp(arm));
+    driverController.leftTrigger(.1).whileTrue(ArmCommands.moveArmDown(arm));
+    driverController.rightTrigger(0.2).onTrue(ArmCommands.extendArm(arm));
 
-     driverController
-         .b()
+    driverController
+        .a()
+        .whileTrue(
+            new SequentialCommandGroup(
+                    new ExtensionPositionCommand(arm, 0.0),
+                    new PivotPositionCommand(arm, Rotation2d.fromDegrees(50)),
+                    new WristPositionCommand(arm, Rotation2d.fromDegrees(315)))
+                .andThen(
+                    new ExtensionPositionCommand(arm, 0.0),
+                    new PivotPositionCommand(arm, Rotation2d.fromDegrees(40)),
+                    new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+
+    driverController
+        .b()
+        .onTrue(
+            new SequentialCommandGroup(new PivotPositionCommand(arm, Rotation2d.fromDegrees(45))));
+    driverController
+        .x()
+        .onTrue(
+            new SequentialCommandGroup(new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
+    driverController
+         .y()
          .onTrue(
-             new SequentialCommandGroup(new PivotPositionCommand(arm, Rotation2d.fromDegrees(45))));
-     driverController
-         .x()
-         .onTrue(
-             new SequentialCommandGroup(new WristPositionCommand(arm, Rotation2d.fromDegrees(45))));
-     driverController
-          .y()
-          .onTrue(
-            new SequentialCommandGroup(new ExtensionPositionCommand(arm,12)));
-      */
+           new SequentialCommandGroup(new ExtensionPositionCommand(arm,12)));
+     */
 
   }
 
