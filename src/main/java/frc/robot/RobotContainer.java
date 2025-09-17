@@ -84,15 +84,23 @@ public class RobotContainer {
     autoChooser.addOption("simple", DriveCommands.auto(drive));
 
     // Pathplanner Named Commands
-    NamedCommands.registerCommand("pivot to L3", new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)));
-    NamedCommands.registerCommand("pivot to Intake", new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)));
-    NamedCommands.registerCommand("pivot to L2", new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)));
-    NamedCommands.registerCommand("de-algae pivot", new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)));
+    NamedCommands.registerCommand(
+        "pivot to L3", new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)));
+    NamedCommands.registerCommand(
+        "pivot to Intake", new PivotPositionCommand(arm, Rotation2d.fromDegrees(52.5)));
+    NamedCommands.registerCommand(
+        "pivot to L2", new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)));
+    NamedCommands.registerCommand(
+        "de-algae pivot", new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)));
 
-    NamedCommands.registerCommand("wrist to L3", new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)));
-    NamedCommands.registerCommand("de-algae wrist 1", new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)));
-    NamedCommands.registerCommand("de-algae wrist 2", new WristPositionCommand(arm, Rotation2d.fromDegrees(10)));
-    NamedCommands.registerCommand("wrist to L2", new WristPositionCommand(arm, Rotation2d.fromDegrees(257)));
+    NamedCommands.registerCommand(
+        "wrist to L3", new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)));
+    NamedCommands.registerCommand(
+        "de-algae wrist 1", new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)));
+    NamedCommands.registerCommand(
+        "de-algae wrist 2", new WristPositionCommand(arm, Rotation2d.fromDegrees(10)));
+    NamedCommands.registerCommand(
+        "wrist to L2", new WristPositionCommand(arm, Rotation2d.fromDegrees(257)));
 
     NamedCommands.registerCommand("extension to L3", new ExtensionPositionCommand(arm, 3.0));
     NamedCommands.registerCommand("extension to L2", new ExtensionPositionCommand(arm, 0.0));
@@ -101,7 +109,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", new CoralIntakeCommand(coral));
 
     NamedCommands.registerCommand("rotate 60 degrees Right", new AutoRotateCommand(drive, 0.5, 60));
-    NamedCommands.registerCommand("rotate 60 degrees Left", new AutoRotateCommand(drive, -0.5, -60));
+    NamedCommands.registerCommand(
+        "rotate 60 degrees Left", new AutoRotateCommand(drive, -0.5, -60));
 
     // Configure the button bindings
     configureBindings();

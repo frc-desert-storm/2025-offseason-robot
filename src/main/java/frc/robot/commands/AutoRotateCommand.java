@@ -7,14 +7,14 @@ public class AutoRotateCommand extends Command {
 
   private final Drive drive;
   private final double rotSetpoint;
-  //private final double ySpeed;
+  // private final double ySpeed;
   private final double rotSpeed;
 
   public AutoRotateCommand(Drive drive, double rotSpeed, double rotInDegrees) {
     this.drive = drive;
-    //this.ySpeed = ySpeed;
+    // this.ySpeed = ySpeed;
     this.rotSpeed = rotSpeed;
-    if(rotInDegrees < 0){
+    if (rotInDegrees < 0) {
       rotSetpoint = drive.getPose() - rotInDegrees;
     } else {
       rotSetpoint = drive.getPose() + rotInDegrees;
@@ -32,9 +32,9 @@ public class AutoRotateCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    if(rotSetpoint < drive.getPose()){
+    if (rotSetpoint < drive.getPose()) {
       return (rotSetpoint == (drive.getPose() + 0.5));
-    } else{
+    } else {
       return (rotSetpoint == (drive.getPose() - 0.5));
     }
   }
