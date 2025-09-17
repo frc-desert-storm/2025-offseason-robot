@@ -108,10 +108,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("score", new CoralOuttakeCommand(coral));
     NamedCommands.registerCommand("intake", new CoralIntakeCommand(coral));
 
-    NamedCommands.registerCommand("rotate 60 degrees Right", new AutoRotateCommand(drive, 0.5, 60));
-    NamedCommands.registerCommand(
-        "rotate 60 degrees Left", new AutoRotateCommand(drive, -0.5, -60));
-
     // Configure the button bindings
     configureBindings();
   }
