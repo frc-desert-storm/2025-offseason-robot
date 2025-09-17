@@ -22,6 +22,7 @@ public final class Constants {
   // TODO: Over encapsulation- remove this class after Aug ARL
   public static class OperatorConstants {
     public static final int driverControllerPort = 0;
+    public static final int operatorControllerPort = 1;
   }
 
   public static final double brownoutVoltage = 7.5;

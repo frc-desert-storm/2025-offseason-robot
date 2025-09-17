@@ -9,6 +9,55 @@
           "data": {
             "pathName": "Right path"
           }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "pivot to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "wrist to L3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "extension to L3"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Second"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
         }
       ]
     }

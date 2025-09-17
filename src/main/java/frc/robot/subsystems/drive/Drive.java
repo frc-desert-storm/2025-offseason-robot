@@ -56,8 +56,8 @@ public class Drive extends SubsystemBase {
         // Also optionally outputs individual module feedforwards
         new PPHolonomicDriveController( // PPHolonomicController is the built in path following
             // controller for holonomic drive trains
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+            new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(1.0, 0.0, 0.0) // Rotation PID constants
             ),
         ppConfig, // The robot configuration
         () -> {
@@ -115,6 +115,10 @@ public class Drive extends SubsystemBase {
   public void resetPose(Pose2d pose) {
     m_poseEstimator.resetPose(pose);
     gyroIO.resetRotation(pose.getRotation());
+  }
+
+  public double getPose() {
+    return gyroIO.getRotation();
   }
 
   /** Drives the robot using the specified ChassisSpeeds. Mostly for pathplanner */
