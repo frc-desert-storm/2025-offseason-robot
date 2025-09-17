@@ -182,7 +182,6 @@ public class RobotContainer {
                 new ExtensionPositionCommand(arm, 0.0)));
 
     // See what happens w/ out this because why do we have the same command twice?
-    // driverController.start().onTrue(DriveCommands.resetPose(drive));
 
     // Spins manipulator wheels for scoring
     driverController.rightTrigger().whileTrue(new CoralOuttakeCommand(coral));
