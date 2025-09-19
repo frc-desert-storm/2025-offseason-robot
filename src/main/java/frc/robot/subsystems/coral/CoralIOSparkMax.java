@@ -16,7 +16,7 @@ public class CoralIOSparkMax implements CoralIO {
   public CoralIOSparkMax() {
     var config = new SparkMaxConfig();
     config
-        .idleMode(SparkBaseConfig.IdleMode.kCoast)
+        .idleMode(SparkBaseConfig.IdleMode.kBrake)
         .smartCurrentLimit(coralCurrentLimit)
         .voltageCompensation(11.5);
     config.encoder.uvwMeasurementPeriod(10).uvwAverageDepth(2);

@@ -81,7 +81,7 @@ public class ArmConstants {
   public static final double wristRealKd = 0.0;
 
   public static final double wristRealKv = 0.0;
-  public static final double wristRealKg = 0.8;
+  public static final double wristRealKg = 0.0;
   public static final double wristRealKs = 0.0;
   public static final double wristRealKa = 0.0;
 

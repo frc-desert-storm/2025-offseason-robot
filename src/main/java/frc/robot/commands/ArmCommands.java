@@ -40,7 +40,7 @@ public class ArmCommands {
           double setpoint = arm.getPivotTargetAngle().getDegrees();
           Logger.recordOutput("arm/pivot", setpoint);
           if (setpoint <= 120) {
-            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint + 0.5));
+            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint + 0.2));
           }
         },
         arm);
@@ -53,7 +53,7 @@ public class ArmCommands {
           double setpoint = arm.getPivotTargetAngle().getDegrees();
           Logger.recordOutput("arm/pivot", setpoint);
           if (setpoint >= -9.8) {
-            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint - 0.5));
+            arm.setPivotTargetAngle(Rotation2d.fromDegrees(setpoint - 0.2));
           }
         },
         arm);

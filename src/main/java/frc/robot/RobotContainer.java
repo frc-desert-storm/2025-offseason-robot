@@ -105,8 +105,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("extension to L3", new ExtensionPositionCommand(arm, 3.0));
     NamedCommands.registerCommand("extension to L2", new ExtensionPositionCommand(arm, 0.0));
 
-    NamedCommands.registerCommand("score", new CoralOuttakeCommand(coral));
-    NamedCommands.registerCommand("intake", new CoralIntakeCommand(coral));
+    NamedCommands.registerCommand("score", new AutoCoralOutake(coral));
+    NamedCommands.registerCommand("end", new AutoCoralOutakeEnd(coral));
+
+    autoChooser.addOption("move", new CenterAuto(drive, arm, coral));
 
     // Configure the button bindings
     configureBindings();

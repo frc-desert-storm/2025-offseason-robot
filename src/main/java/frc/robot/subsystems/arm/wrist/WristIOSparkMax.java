@@ -35,7 +35,7 @@ public class WristIOSparkMax implements WristIO {
   public WristIOSparkMax() {
     var config = new SparkMaxConfig();
     config
-        .idleMode(SparkBaseConfig.IdleMode.kCoast)
+        .idleMode(SparkBaseConfig.IdleMode.kBrake)
         .smartCurrentLimit(wristCurrentLimit)
         .voltageCompensation(11.5);
     config
@@ -58,6 +58,11 @@ public class WristIOSparkMax implements WristIO {
   public void setTargetAngle(Rotation2d target) {
     pid.setGoal(target.getRadians());
     run();
+  }
+
+  @Override
+  public void setToCurrentPosition(){
+    pid.setGoal(wristMotor.getEncoder().getPosition());
   }
 
   @Override

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm.pivot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 import static frc.robot.subsystems.arm.ArmConstants.*;
 
@@ -55,6 +56,9 @@ public class PivotIOSparkMax implements PivotIO {
     config.inverted(pivotRightInverted);
     pivotRightMotor.configure(
         config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+
+    pid.setGoal(
+        Units.degreesToRadians(pivotEncoder.getAbsolutePosition().getValue().in(Degrees) + 20));
   }
 
   @Override

@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
           "type": "sequential",
           "data": {
             "commands": [
@@ -103,70 +109,9 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Center Fourth"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "intake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Fifth"
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "de-algae pivot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "de-algae wrist 1"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Sixth"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "de-algae wrist 2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
+            "name": "end"
           }
         }
       ]
