@@ -110,4 +110,9 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
+
+  @Override
+  public void disabledExit() {
+    robotContainer.enabledInit();
+  }
 }

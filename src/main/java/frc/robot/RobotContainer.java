@@ -13,6 +13,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
@@ -108,7 +110,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("score", new AutoCoralOutake(coral));
     NamedCommands.registerCommand("end", new AutoCoralOutakeEnd(coral));
 
-    autoChooser.addOption("move", new CenterAuto(drive, arm, coral));
+    autoChooser.addOption("middle de algae", new CenterAuto(drive, arm, coral));
+
+    autoChooser.addOption("drive", new AutoDrive(drive, 2, 0, 0).withTimeout(15));
 
     // Configure the button bindings
     configureBindings();
@@ -146,7 +150,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(80)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(71.62)),
-                new ExtensionPositionCommand(arm, 3.0)));
+                new ExtensionPositionCommand(arm, 0.0)));
 
     // Move to score position for L2
     // DOES NOT SCORE, ONLY MOVES TO POSITION
@@ -155,7 +159,7 @@ public class RobotContainer {
         .onTrue(
             new SequentialCommandGroup(
                 new PivotPositionCommand(arm, Rotation2d.fromDegrees(58)),
-                new WristPositionCommand(arm, Rotation2d.fromDegrees(257)),
+                new WristPositionCommand(arm, Rotation2d.fromDegrees(230)),
                 new ExtensionPositionCommand(arm, 0.0)));
 
     // Move to remove algae on L2
@@ -164,12 +168,12 @@ public class RobotContainer {
         .y()
         .onTrue(
             new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)),
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20.059)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)),
                 new ExtensionPositionCommand(arm, 0.0)))
         .onFalse(
             new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)),
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20.059)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(10)),
                 new ExtensionPositionCommand(arm, 0.0)));
 
@@ -197,6 +201,17 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(ArmCommands.retractArm(arm));
     operatorController.rightBumper().whileTrue(ArmCommands.extendArm(arm));
+
+    operatorController.povUp().whileTrue(ArmCommands.moveWristUp(arm));
+    operatorController.povDown().whileTrue(ArmCommands.moveWristDown(arm));
+
+    operatorController
+        .y()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance().cancelAll();
+                }));
 
     // Previous Controls
 
@@ -241,5 +256,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public void enabledInit() {
+    arm.wristTeleInit();
   }
 }

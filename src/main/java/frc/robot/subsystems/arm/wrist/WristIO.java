@@ -42,5 +42,5 @@ public interface WristIO {
 
   default void run() {}
 
-  default void setToCurrentPosition(){ }
+  default void setToCurrentPosition() {}
 }

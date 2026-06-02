@@ -137,4 +137,8 @@ public class Arm extends SubsystemBase {
   public boolean atExtensionGoal() {
     return extensionIO.atGoal();
   }
+
+  public void wristTeleInit() {
+    wristIO.setToCurrentPosition();
+  }
 }

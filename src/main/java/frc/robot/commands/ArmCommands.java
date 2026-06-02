@@ -8,6 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.wrist.*;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmCommands {
@@ -112,6 +113,32 @@ public class ArmCommands {
           double setpoint = arm.getExtensionTargetPosition();
           if (Units.metersToInches(setpoint) >= minExtensionInches) {
             arm.setExtensionTargetLength(setpoint - 0.01);
+          }
+        },
+        arm);
+  }
+
+  public static Command moveWristUp(Arm arm) {
+    return Commands.run(
+        () -> {
+          // Apply output
+          double setpoint = arm.getWristTargetAngle().getDegrees();
+          Logger.recordOutput("arm/wrist", setpoint);
+          if (setpoint <= 270) {
+            arm.setWristTargetAngle(Rotation2d.fromDegrees(setpoint + 0.2));
+          }
+        },
+        arm);
+  }
+
+  public static Command moveWristDown(Arm arm) {
+    return Commands.run(
+        () -> {
+          // Apply output
+          double setpoint = arm.getWristTargetAngle().getDegrees();
+          Logger.recordOutput("arm/wrist", setpoint);
+          if (setpoint >= 0.2) {
+            arm.setWristTargetAngle(Rotation2d.fromDegrees(setpoint - 0.2));
           }
         },
         arm);

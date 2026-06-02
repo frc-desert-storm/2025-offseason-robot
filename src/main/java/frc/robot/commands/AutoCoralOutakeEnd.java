@@ -14,11 +14,6 @@ public class AutoCoralOutakeEnd extends Command {
 
   @Override
   public void initialize() {
-    coral.setVoltage(0);
-  }
-
-  @Override
-  public void end(boolean idk) {
-    coral.setVoltage(.5);
+    coral.setVoltage(0.5);
   }
 }

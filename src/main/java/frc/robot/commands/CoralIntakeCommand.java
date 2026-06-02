@@ -17,7 +17,7 @@ public class CoralIntakeCommand extends Command {
 
   @Override
   public void execute() {
-    coral.setVoltage(3);
+    coral.setVoltage(8);
   }
 
   @Override

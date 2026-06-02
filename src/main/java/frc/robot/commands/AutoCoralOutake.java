@@ -13,12 +13,7 @@ public class AutoCoralOutake extends Command {
   }
 
   @Override
-  public void execute() {
-    coral.setVoltage(-5);
-  }
-
-  @Override
   public void initialize() {
-    coral.setVoltage(-5);
+    coral.setVoltage(-8);
   }
 }

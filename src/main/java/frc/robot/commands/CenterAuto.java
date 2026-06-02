@@ -12,13 +12,13 @@ public class CenterAuto extends SequentialCommandGroup {
     addCommands(
         new WaitCommand(0.25),
         new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)),
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20.059)),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(139.082)),
                 new ExtensionPositionCommand(arm, 0.0))
             .withTimeout(1),
-        new AutoDrive(drive, 0.75, 0, 0).withTimeout(1.5),
+        new AutoDrive(drive, 0.75, 0, 0).withTimeout(2.5),
         new SequentialCommandGroup(
-                new PivotPositionCommand(arm, Rotation2d.fromDegrees(22.059)).withTimeout(0.25),
+                new PivotPositionCommand(arm, Rotation2d.fromDegrees(20.059)).withTimeout(0.25),
                 new WristPositionCommand(arm, Rotation2d.fromDegrees(10)).withTimeout(0.5),
                 new ExtensionPositionCommand(arm, 0.0).withTimeout(0.25))
             .withTimeout(1),

@@ -61,7 +61,7 @@ public class WristIOSparkMax implements WristIO {
   }
 
   @Override
-  public void setToCurrentPosition(){
+  public void setToCurrentPosition() {
     pid.setGoal(wristMotor.getEncoder().getPosition());
   }
 
